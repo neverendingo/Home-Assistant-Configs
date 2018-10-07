@@ -1,0 +1,11 @@
+- alias: Nachricht an Ingo wenn Update vorhanden
+  trigger:
+    - platform: state
+      entity_id: updater.updater
+  condition:
+    - condition: template
+      value_template: "{{ states('updater.updater') != 'unknown' }}"
+  action:
+    - service: notify.notify_ingo
+      data_template:
+        message: "Home Assistant {{ states('updater.updater') }} ist jetzt verfügbar."

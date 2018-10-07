@@ -1,0 +1,119 @@
+############################################################
+# Welche Termine haben wir denn?
+############################################################
+- id: "Termine"
+  alias: "Termine"
+  trigger:
+      platform: time
+      minutes: '/5'
+      seconds: 0
+  condition:
+      condition: template
+      value_template: '{{ is_state("calendar.frikatermine.offset_reached", "true") }}'
+  action:
+    - service: notify.notify_group
+      data_template:
+          message: >
+            Termin vom gemeinsamen Kalender!!
+            {{ states.calendar.frikatermine.attributes.message }}
+            Am {{as_timestamp(states.calendar.frikatermine.attributes.start_time)|timestamp_custom("%A, %d.%m.%Y, %H:%M", true)}}
+    - service: snips.say
+      data_template:
+        text: >
+              Termin vom gemeinsamen Kalender!!
+              {{ states.calendar.frikatermine.attributes.message }}
+              Am {{as_timestamp(states.calendar.frikatermine.attributes.start_time)|timestamp_custom("%A, %d.%m.%Y, %H:%M", true)}}
+
+############################################################
+# der morgendliche Gruß an die Gruppe/per Voice
+############################################################
+#- id: Gruss
+  #alias: Gruss zum Sonnenaufgang
+  #initial_state: True
+  #hide_entity: False
+  #trigger:
+    #platform: sun
+    #event: sunrise
+  #action:
+    #- service: notify.notify_group
+      #data_template:
+          #message: >
+            #{% set greetings = [
+              #"Einen wunderschönen guten Morgen!",
+              #"Guten Morgen, Schlafmützen!",
+              #"Auf auf, der Tag wartet!",
+              #"Der frühe Vogel fängt den Wurm, die Sonne ist schon raus.",
+              #"Schon wach?"
+            #] %}
+            #{{greetings|random}}
+            #Es ist {{ states.sensor.dark_sky_temperature.state | round(0) }} Grad Celsius draußen.
+            #Die Höchsttemperatur beträgt heute {{ states.sensor.dark_sky_daily_high_temperature.state | round(0) }} Grad (gefühlt {{ states.sensor.dark_sky_daily_high_apparent_temperature.state | round(0) }} Grad). Die Chance auf Regen beträgt {{ states.sensor.dark_sky_precip_probability.state | round(0) }} Prozent.
+            #Bisher ist der abendliche Koch {{ states.input_select.who_cooks.state}}, bitte noch bis 15 Uhr ändern, falls gewünscht!
+            #{%- if states.sensor.moon.state == 'Full moon' -%}
+              #Und heute abend mal unbedingt den Vollmond beachten!
+            #{%- endif -%}
+            #{% if states('sensor.dark_sky_precip_probability') | int > 50 %}
+            #Regenschirm nicht vergessen! Einen schönen (und verregneten) Tag!
+            #{% else %}
+            #Einen schönen Tag!
+            #{% endif %}
+    #- service: snips.say
+      #data_template:
+        #text: >
+              #{% set greetings = [
+                #"Einen wunderschönen guten Morgen!",
+                #"Guten Morgen, Schlafmützen!",
+                #"Auf auf, der Tag wartet!",
+                #"Der frühe Vogel fängt den Wurm, die Sonne ist schon raus.",
+                #"Schon wach?"
+              #] %}
+              #{{greetings|random}}
+              #Es ist {{ states.sensor.dark_sky_temperature.state | round(0) }} Grad Celsius draußen.
+              #Die Höchsttemperatur beträgt heute {{ states.sensor.dark_sky_daily_high_temperature.state | round(0) }} Grad (gefühlt {{ states.sensor.dark_sky_daily_high_apparent_temperature.state | round(0) }} Grad). Die Chance auf Regen beträgt {{ states.sensor.dark_sky_precip_probability.state | round(0) }} Prozent.
+              #Bisher ist der abendliche Koch {{ states.input_select.who_cooks.state}}, bitte noch bis 15 Uhr ändern, falls gewünscht!
+              #{%- if states.sensor.moon.state == 'Full moon' -%}
+                #Und heute abend mal unbedingt den Vollmond beachten!
+              #{%- endif -%}
+              #{% if states('sensor.dark_sky_precip_probability') | int > 50 %}
+              #Regenschirm nicht vergessen! Einen schönen (und verregneten) Tag!
+              #{% else %}
+              #Einen schönen Tag!
+              #{% endif %}
+
+############################################################
+# Wer kocht heute?
+############################################################
+- id: "Wer kocht"
+  alias: "Wer kocht"
+  trigger:
+    platform: state
+    entity_id: input_select.who_cooks
+  action:
+    - service: snips.say
+      data_template:
+        text: 'Es wurde entschieden, heute kocht {{ states.input_select.who_cooks.state}}. Einen guten Appetit!'
+    - service: mqtt.publish
+      data_template:
+        topic: "home/who_cooks"
+        retain: true
+        payload: '{{ states.input_select.who_cooks.state }}'
+
+############################################################
+# Der Gruppe/dem Koch um 15h bescheidsagen
+############################################################
+- id: "Koch benachrichtigen"
+  alias: "Koch benachrichtigen"
+  trigger:
+      platform: time
+      hours: 15
+      minutes: 0
+      seconds: 0
+  action:
+    - service: snips.say
+      data_template:
+        text: 'Nicht vergessen, {{ states.input_select.who_cooks.state}} kocht heute. Einen guten Appetit!'
+    - service: notify.notify_group
+      data_template:
+          message: >
+            Nicht vergessen, {{ states.input_select.who_cooks.state}} kocht heute. Einen guten Appetit!
+

@@ -1,0 +1,23 @@
+sleeping_steffi:
+  alias: "Schlafen gehen"
+  sequence:
+    - service: hue.hue_activate_scene
+      data:
+        group_name: "Wohnzimmer"
+        scene_name: "Nachtlicht"
+    - delay:
+        minutes: 15
+    - service: switch.turn_off
+      entity_id: switch.effects
+
+awaking_steffi:
+  alias: "Aufstehen"
+  sequence:
+    - service: light.turn_on
+      data:
+        entity_id: group.wohnzimmer_hue
+        transition: 360
+
+#sleeping_ingo:
+#  alias: "Schlafen gehen"
+#  sequence:

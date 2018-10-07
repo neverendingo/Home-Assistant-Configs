@@ -1,0 +1,7 @@
+>
+{# Moon sentence #}
+{% macro moon_sentence() -%}
+  {%- if states.sensor.moon.state == 'Full moon' -%}
+    Schau dir heute Nacht den Vollmond an!
+  {%- endif -%}
+{%- endmacro %}

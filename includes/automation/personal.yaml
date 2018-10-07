@@ -1,0 +1,25 @@
+############################################################
+# Handyakku Ingo
+############################################################
+- id: "Smartphonebatterie Ingo"
+  alias: "Smartphonebatterie Ingo"
+  trigger:
+    platform: numeric_state
+    entity_id: device_tracker.ingo_motog5
+    value_template: '{{ state.attributes.battery }}'
+    below: 30
+  action:
+    service: notify.notify_group
+    data_template:
+      message: >
+        {{ trigger.to_state.attributes.friendly_name }}'s Smartphonebatterie ist niedrig: {{ trigger.to_state.attributes.battery }}%
+
+- id: "Essen kommen"
+  alias: "Essen kommen"
+  trigger:
+    platform: state
+    entity_id: input_boolean.essen_kommen
+    to: "on"
+  action:
+    service: script.turn_on
+    entity_id: script.essen_kommen

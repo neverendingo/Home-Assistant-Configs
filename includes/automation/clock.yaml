@@ -1,0 +1,54 @@
+############################################################
+# die eierlegende Wollmilchsau, der Wecker
+############################################################
+- id: Wecker
+  alias: 'Wecker'
+  trigger:
+      platform: time
+      minutes: '/1'
+      seconds: 0
+  condition:
+      condition: template
+      value_template: '{{ is_state("input_boolean.alarm_aktiv", "on") and now().time().strftime("%-H:%M") == states.sensor.alarm_clock_time.state }}'
+  action:
+      - service: switch.turn_on
+        entity_id: automation.livingroom_motion
+      - service: hue.hue_activate_scene
+        data_template:
+          group_name: '{% if is_state("input_boolean.awake_light", "on") %}Wohnzimmer{% else %}none{% endif %}'
+          scene_name: '{% if is_state("input_boolean.awake_light", "on") %}Migräne{% else %}none{% endif %}'
+      - service: media_player.volume_set
+        data_template:
+          entity_id: '{% if is_state("input_boolean.awake_radio", "on") %}media_player.volumio{% else %}none{% endif %}'
+          volume_level: 0.5
+      - service: media_player.play_media
+        data_template:
+          entity_id: >
+              media_player.livingroom
+          media_content_id: >
+            {% if is_state("input_select.timer_radio_station", "Delta Radio") %}
+              http://streams.deltaradio.de/delta-live/mp3-192/mediaplayerdeltaradio
+            {%-elif is_state("input_select.timer_radio_station", "Delta Radio Grunge") %}
+              http://streams.deltaradio.de/delta-grunge/mp3-192/grunge
+            {%-elif is_state("input_select.timer_radio_station", "Delta Radio Alternative") %}
+              http://streams.deltaradio.de/delta-alternative/mp3-192/mediaplayer
+            {%-elif is_state("input_select.timer_radio_station", "Radio Paradise") %}
+              http://stream-uk1.radioparadise.com/aac-320
+            {%-elif is_state("input_select.timer_radio_station", "Rockland Radio") %}
+              http://188.94.97.90/rockland.mp3
+            {%-elif is_state("input_select.timer_radio_station", "ElDoRadio") %}
+              http://sender.eldoradio.de:8000/low
+            {%-elif is_state("input_select.timer_radio_station", "Radio 91.2") %}
+              http://server2.lokalradioserver.de:8000/xstream.m3u
+            {%-elif is_state("input_select.timer_radio_station", "Eins Live") %}
+              https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3
+            {% else %}
+              none
+            {% endif %}
+          media_content_type: audio/mp3
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: "{% if(states.input_boolean.coffee.state) == 'on' %} true {% else %} false {% endif %}"
+      - service: switch.turn_on
+        entity_id: switch.kaffeemaschine

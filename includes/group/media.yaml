@@ -1,0 +1,40 @@
+############################################################
+# View
+############################################################
+media:
+  view: yes
+  entities:
+    - media_player.amazon_fire_tv
+    - group.music
+    - group.tv
+    - group.computer
+    - group.video
+  icon: mdi:play-pause
+
+############################################################
+# Groups
+############################################################
+music:
+  entities:
+    - media_player.wohnzimmer
+    - media_player.arbeitszimmer
+    - input_select.radio_player
+    - input_select.radio_station
+    #- switch.kodi_playlist
+    #- switch.kodi_radio
+    #- switch.gibson_radio
+    #- switch.all_radio
+
+computer:
+  name: Computer
+  entities:
+    - switch.mute_gibson
+    - switch.mute_monitor
+
+Video:
+  control: hidden
+  entities:
+    #- input_select.kodi_results
+    #- script.get_recent_movies
+    #- script.get_recent_albums
+    #- script.get_recent_episodes

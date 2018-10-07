@@ -1,0 +1,89 @@
+playlists:
+  name: Playlist
+  options:
+    - Steffi1
+    - Radio
+    - None
+  initial: None
+  icon: mdi:weather-rainy
+
+who_cooks:
+  name: "Kochen"
+  options:
+    - Steffi
+    - Ingo
+  icon: mdi:panda
+
+radio_station:
+  name: Radiosender
+  options:
+    - Delta Radio
+    - Delta Radio Grunge
+    - Delta Radio Alternative
+    - Eins Live
+    - ElDoRadio
+    - Radio Paradise
+    - Radio 91.2
+    - Rockland Radio
+    - None
+  initial: None
+  icon: mdi:radio
+
+timer_radio_station:
+  name: Radiosender
+  options:
+    - Delta Radio
+    - Delta Radio Grunge
+    - Delta Radio Alternative
+    - Eins Live
+    - ElDoRadio
+    - Radio Paradise
+    - Radio 91.2
+    - Rockland Radio
+    - None
+  initial: None
+  icon: mdi:radio
+
+radio_player:
+  name: Radioplayer
+  options:
+    - Wohnzimmer
+    - Arbeitszimmer
+    - None
+  initial: None
+  icon: mdi:airplay
+
+light_scenes:
+  name: Hue Szenen
+  options:
+    - None
+    - Sonnenuntergang
+    - Entspannen
+    - Ibiza
+    - Hell
+    - Frühlingsblüten
+    - Hell
+    - Morgendämmerung
+    - Sonntagmorgen
+    - Sterne
+    - Kürbis
+    - Tropendämmerung
+    - Warm
+    - Bunt
+    - Gedimmt
+    - Training
+    - Mittwinter
+    - Lake Placid
+    - Migräne
+    - Nordlichter
+    - Strand
+    - Ingo 1
+    - Konzentrieren
+    - Lesen
+    - Nachtlicht
+    - Mittsommer
+    - Herbst
+    - Energie tanken
+    - Smaragd
+  initial: None
+  icon: mdi:lightbulb-on

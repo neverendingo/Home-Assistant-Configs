@@ -1,0 +1,91 @@
+#############################################################
+## Licht wieder auf normal, wenn Mediaplayer Pause
+#############################################################
+#- alias: "Media player pausiert/gestoppt"
+  #trigger:
+    #- platform: state
+      #entity_id: media_player.amazon_fire_tv
+      #to: 'idle'
+  #condition:
+    #- condition: state
+      #entity_id: sun.sun
+      #state: 'below_horizon'
+  #action:
+      #service: scene.turn_on
+      #entity_id: scene.livingroom_normal
+
+#############################################################
+## Licht dimmen für Media Player
+#############################################################
+#- alias: "Media player spielt"
+  #trigger:
+    #- platform: state
+      #entity_id: media_player.amazon_fire_tv
+      #to: 'playing'
+  #condition:
+    #- condition: state
+      #entity_id: sun.sun
+      #state: 'below_horizon'
+  #action:
+      #service: scene.turn_on
+      #entity_id: scene.livingroom_dim
+
+############################################################
+# Radio aus
+############################################################
+- alias: Radio aus
+  trigger:
+    - platform: state
+      entity_id: input_select.radio_station
+      to: "None"
+  action:
+    service: media_player.media_play_pause
+    data_template:
+      entity_id: >
+          {% if is_state("input_select.radio_player", "Wohnzimmer") %}
+            media_player.livingroom
+          {%-elif is_state("input_select.radio_player", "Arbeitszimmer") %}
+            media_player.office
+          {% else %}
+            none
+          {% endif %}
+
+############################################################
+# Radio an
+############################################################
+- alias: Radio an
+  trigger:
+    - platform: state
+      entity_id: input_select.radio_station
+  action:
+    - service: media_player.play_media
+      data_template:
+        entity_id: >
+          {% if is_state("input_select.radio_player", "Wohnzimmer") %}
+            media_player.livingroom
+          {%-elif is_state("input_select.radio_player", "Arbeitszimmer") %}
+            media_player.office
+          {% else %}
+            none
+          {% endif %}
+        media_content_id: >
+          {% if is_state("input_select.radio_station", "Delta Radio") %}
+            http://streams.deltaradio.de/delta-live/mp3-192/mediaplayerdeltaradio
+          {%-elif is_state("input_select.radio_station", "Delta Radio Grunge") %}
+            http://streams.deltaradio.de/delta-grunge/mp3-192/grunge
+          {%-elif is_state("input_select.radio_station", "Delta Radio Alternative") %}
+            http://streams.deltaradio.de/delta-alternative/mp3-192/mediaplayer
+          {%-elif is_state("input_select.radio_station", "Radio Paradise") %}
+            http://stream-uk1.radioparadise.com/aac-320
+          {%-elif is_state("input_select.radio_station", "Rockland Radio") %}
+            http://188.94.97.90/rockland.mp3
+          {%-elif is_state("input_select.radio_station", "ElDoRadio") %}
+            http://sender.eldoradio.de:8000/low
+          {%-elif is_state("input_select.radio_station", "Radio 91.2") %}
+            http://server2.lokalradioserver.de:8000/xstream.m3u
+          {%-elif is_state("input_select.radio_station", "Eins Live") %}
+            https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3
+          {% else %}
+            none
+          {% endif %}
+        media_content_type: audio/mp3

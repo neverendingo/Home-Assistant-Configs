@@ -1,0 +1,250 @@
+title: FrikaHome
+
+resources:
+  - url: /local/content-card-example.js
+    type: module
+  - url: /local/wired-cards.js
+    type: module
+  - url: /local/neverend.css
+    type: css
+
+background: center / cover no-repeat url("/local/images/background.jpg") fixed
+
+views:
+  ################################################################
+  ################################################################
+  # Hauptansicht
+  ################################################################
+  ################################################################
+  - icon: mdi:home-assistant
+    title: Default
+    id: default
+
+    cards:
+      ############################################################
+      # Hauptansicht
+      ############################################################
+      - type: horizontal-stack
+        cards:
+          - type: glance
+            column_width: calc(100% / 2)
+            entities:
+              - device_tracker.ingo_motog5
+              - device_tracker.steffi_motog3
+          - type: glance
+            column_width: calc(100% / 2)
+            entities:
+              - input_boolean.anwesend
+              - entity: input_boolean.urlaub
+                tap_action: "toggle"
+              - entity: input_boolean.sommer_modus
+                name: Sommermodus
+                tap_action: "toggle"
+              - entity: input_boolean.workday
+                tap_action: "toggle"
+              - entity: input_select.who_cooks
+                tap_action: "call-service"
+                service: input_select.select_next
+                service_data:
+                  entity_id: input_select.who_cooks
+              - entity: input_boolean.alarm_aktiv
+                tap_action: "toggle"
+      ############################################################
+      # Wecker
+      ############################################################
+      - type: conditional
+        conditions:
+          - entity: input_boolean.alarm_aktiv
+            state: "on"
+        card:
+          type: entities
+          entities:
+            - sensor.alarm_clock_time
+            - input_number.alarm_clock_hour
+            - input_number.alarm_clock_minute
+            - input_boolean.coffee
+            - input_boolean.awake_light
+            - input_boolean.awake_radio
+            - input_select.timer_radio_station
+      ############################################################
+      # Wetter
+      ############################################################
+      - type: weather-forecast
+        entity: weather.wetter
+
+      - type: entities
+        entities:
+          - sensor.moon
+
+      - type: entities
+        title: Pi
+        entities:
+          - sensor.disk_use_percent_
+          - sensor.processor_use
+          - sensor.memory_free
+          - sensor.network_in_wlan0
+          - sensor.network_out_wlan0
+          - sensor.last_boot
+          - type: divider
+          - sensor.speedtest_download
+          - sensor.speedtest_upload
+          - sensor.speedtest_ping
+
+  ################################################################
+  ################################################################
+  # Räume
+  ################################################################
+  ################################################################
+  - icon: mdi:room-service
+    title: Räume
+    id: rooms
+    cards:
+      - type: entities
+        title: Wohnzimmer
+        show_header_toggle: false
+        entities:
+          - light.livingroom_leselicht
+          - light.livingroom_buecher
+          - light.lampe_1
+          - light.lampe_2
+          - light.lampe_3
+          - input_boolean.livingroom_partymode
+          - input_select.light_scenes
+          - type: divider
+          - climate.heating_livingroom
+          - type: divider
+          - input_boolean.livingroom_motion
+
+      - type: entities
+        title: Arbeitszimmer
+        show_header_toggle: false
+        entities:
+          - light.office
+          - light.office_leseecke
+          - type: divider
+          - climate.heating_office
+          - climate.heating_office_eco
+          - type: divider
+          - sensor.arbeitszimmer_temperatur
+          - sensor.arbeitszimmer_gef_temperatur
+          - sensor.arbeitszimmer_luftfeuchtigkeit
+          - light.office_led
+          - input_boolean.essen_kommen
+          - scene.office_room
+          - type: divider
+          - input_boolean.office_motion
+      - type: entities
+        title: Küche
+        show_header_toggle: false
+        entities:
+          - switch.kaffeemaschine
+      - type: entities
+        title: Schlafzimmer
+        show_header_toggle: false
+        entities:
+          - light.schlafzimmer
+
+      - type: history-graph
+        title: 'Temperaturen'
+        entities:
+          - sensor.owm_temperature
+          - entity: sensor.fibaro_livingroom_temperature
+            name: Wohnzimmer
+          - entity: sensor.arbeitszimmer_temperatur
+            name: Arbeitszimmer
+
+  ################################################################
+  ################################################################
+  # Persönlich
+  ################################################################
+  ################################################################
+  - icon: mdi:account-multiple
+    title: Persönlich
+    id: personal
+    cards:
+      ############################################################
+      # Steffis Zeug
+      ############################################################
+      - type: entities
+        name: Steffi
+        entities:
+          - device_tracker.steffi_motog3
+          - input_boolean.steffi_schlafen
+
+      ############################################################
+      # Ingos Zeug
+      ############################################################
+      - type: entities
+        name: Ingo
+        entities:
+          - device_tracker.ingo_motog5
+          - sensor.ingo_battery
+          - input_boolean.ingo_schlafen
+
+      ############################################################
+      # Alle Geräte
+      ############################################################
+      - type: entity-filter
+        entities:
+          - device_tracker.kindle_ingo
+          - device_tracker.tablet_ingo
+          - device_tracker.kindle_steffi
+          - device_tracker.tablet_steffi
+          - device_tracker.laptop_steffi
+          - device_tracker.router
+          - device_tracker.printer
+          - device_tracker.bob
+          - device_tracker.firetv
+          - device_tracker.nextcloudpi
+          - device_tracker.phillips_hue
+          - device_tracker.lumi
+          - device_tracker.bravia
+          - device_tracker.multisensor_office
+          - device_tracker.e09861bd260f
+          - device_tracker.bc79ad80fdc1
+          - device_tracker.b827eb84915a
+          - device_tracker.b827ebd2035a
+        state_filter:
+          - 'home'
+        card:
+          type: glance
+          title: Geräte Online
+          column_width: calc(100% / 4)
+
+      - type: entities
+        title: Termine
+        entities:
+          - sensor.template_calendar_birthdays
+          - sensor.frikatermine
+          - sensor.feiertage_in_deutschland
+
+      ############################################################
+      # Wo ist Ingo
+      ############################################################
+      - type: map
+        entities:
+          - entity: device_tracker.ingo_motog5
+        title: Wo ist Ingo?
+
+
+  ################################################################
+  ################################################################
+  # Medien
+  ################################################################
+  ################################################################
+  - icon: mdi:play-pause
+    title: Medien
+    id: media
+    cards:
+      - type: entities
+        title: Radio
+        entities:
+          - input_select.radio_player
+          - input_select.radio_station
+      - type: media-control
+        entity: media_player.amazon_fire_tv
+      - type: media-control
+        entity: media_player.wohnzimmer
+      - type: media-control
+        entity: media_player.arbeitszimmer
+

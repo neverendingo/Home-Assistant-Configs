@@ -1,0 +1,51 @@
+############################################################
+# View
+############################################################
+settings:
+  name: Settings
+  view: yes
+  icon: mdi:settings
+  entities:
+    - group.links
+    - group.systemmonitor
+    - group.speedtest
+    - group.wetter
+    - group.all_automations
+    - group.sensoren
+
+############################################################
+# Groups
+############################################################
+links:
+  name: Links
+  entities:
+    - weblink.router
+    - weblink.drucker
+
+systemmonitor:
+  name: System Monitor
+  entities:
+    - sensor.disk_used_
+    - sensor.average_load_5m
+    - sensor.ram_free
+    - sensor.process_apache2
+    - sensor.process_dbusdaemon
+    - sensor.process_named
+
+speedtest:
+  - sensor.speedtest_download
+  - sensor.speedtest_upload
+  - sensor.speedtest_ping
+
+wetter:
+  - sensor.owm_condition
+  - sensor.owm_forecast
+  - sensor.owm_temperature
+  - sensor.owm_humidity
+  - sensor.owm_cloud_coverage
+  - sensor.owm_pressure
+  - sensor.owm_wind_speed
+  - sensor.owm_rain
+  - sensor.owm_snow
+  - sensor.owm_wind_bearing
+

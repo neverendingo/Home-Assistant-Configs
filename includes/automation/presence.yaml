@@ -1,0 +1,137 @@
+############################################################
+# Urlaubsmodus
+############################################################
+- id: "Urlaub"
+  alias: "Urlaub"
+  trigger:
+    platform: state
+    entity_id: sensor.urlaub
+    to: "on"
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.anwesend
+    - service: automation.turn_off
+      entity_id: automation.livingroom_motion
+    - service: automation.turn_off
+      entity_id: automation.livingroom_motion_nachtmodus
+    - service: automation.turn_off
+      entity_id: automation.erste_bewegung_am_tag
+    - service: automation.turn_off
+      entity_id: automation.erste_bewegung_am_tag_aktivieren
+    - service: automation.turn_off
+      entity_id: automation.gruss_zum_sonnenaufgang
+    - service: automation.turn_off
+      entity_id: automation.heizung_am_tag
+    - service: automation.turn_off
+      entity_id: automation.heizung_bei_nacht
+    - service: automation.turn_off
+      entity_id: automation.koch_benachrichtigen
+    - service: automation.turn_off
+      entity_id: automation.livingcolors_auf_zufallige_farbe
+    - service: automation.turn_off
+      entity_id: automation.media_player_pausiertgestoppt
+    - service: automation.turn_off
+      entity_id: automation.media_player_spielt
+    - service: automation.turn_off
+      entity_id: automation.radio_an
+    - service: automation.turn_off
+      entity_id: automation.radio_aus
+    - service: automation.turn_off
+      entity_id: automation.sonnenaufgang
+    - service: automation.turn_off
+      entity_id: automation.sonnenuntergang_licht
+    - service: automation.turn_off
+      entity_id: automation.wecker
+    - service: automation.turn_off
+      entity_id: automation.wer_kocht
+    - service: climate.set_temperature
+      entity_id: climate.heating_livingroom
+      data:
+        temperature: 0
+    - service: climate.set_operation_mode
+      entity_id: climate.heating_office
+      data:
+        entity_id: climate.heating_office
+        operation_mode: "Off"
+
+############################################################
+# Urlaubsmodus aus, alles wieder hochfahren
+############################################################
+- id: "Urlaub aus"
+  alias: "Urlaub aus"
+  trigger:
+    platform: state
+    entity_id: sensor.urlaub
+    to: "off"
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.anwesend
+    - service: automation.turn_on
+      entity_id: automation.livingroom_motion
+    - service: automation.turn_on
+      entity_id: automation.livingroom_motion_nachtmodus
+    - service: automation.turn_on
+      entity_id: automation.erste_bewegung_am_tag
+    - service: automation.turn_on
+      entity_id: automation.erste_bewegung_am_tag_aktivieren
+    - service: automation.turn_on
+      entity_id: automation.gruss_zum_sonnenaufgang
+    - service: automation.turn_on
+      entity_id: automation.heizung_am_tag
+    - service: automation.turn_on
+      entity_id: automation.heizung_bei_nacht
+    - service: automation.turn_on
+      entity_id: automation.koch_benachrichtigen
+    - service: automation.turn_on
+      entity_id: automation.livingcolors_auf_zufallige_farbe
+    - service: automation.turn_on
+      entity_id: automation.media_player_pausiertgestoppt
+    - service: automation.turn_on
+      entity_id: automation.media_player_spielt
+    - service: automation.turn_on
+      entity_id: automation.radio_an
+    - service: automation.turn_on
+      entity_id: automation.radio_aus
+    - service: automation.turn_on
+      entity_id: automation.sonnenaufgang
+    - service: automation.turn_on
+      entity_id: automation.sonnenuntergang_licht
+    - service: automation.turn_on
+      entity_id: automation.wecker
+    - service: automation.turn_on
+      entity_id: automation.wer_kocht
+    - service: climate.set_temperature
+      entity_id: climate.heating_livingroom
+      data:
+        temperature: 20
+    - service: climate.set_operation_mode
+      entity_id: climate.heating_office
+      data:
+        entity_id: climate.heating_office
+        operation_mode: "Heat"
+
+############################################################
+# Steffi geht schlafen
+############################################################
+- id: "Steffi geht schlafen"
+  alias: "Steffi geht schlafen"
+  trigger:
+    platform: state
+    entity_id: sensor.steffi_schlafen
+    to: "on"
+  action:
+    - service: script.turn_on
+      entity_id: script.sleeping_steffi
+############################################################
+# Steffi wacht wieder auf
+############################################################
+- id: "Steffi wacht auf"
+  alias: "Steffi wacht auf"
+  trigger:
+    platform: state
+    entity_id: sensor.steffi_schlafen
+    to: "off"
+  action:
+    - service: script.turn_on
+      entity_id: script.awaking_steffi
+

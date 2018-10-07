@@ -1,0 +1,15 @@
+# Example .gitignore file for your config dir
+*
+!*.yaml
+!includes/*.yaml
+!.gitignore
+*.log
+*.conf
+*.sqlite
+*.xml
+*.db
+*.db*
+secrets.yaml
+known_devices.yaml
+google_calendars.yaml
+ 

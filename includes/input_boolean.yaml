@@ -1,0 +1,60 @@
+alarm_aktiv:
+    name: Wecker aktiv
+    icon: mdi:alarm
+
+urlaub:
+  name: Urlaub
+  initial: off
+  icon: mdi:wallet-travel
+
+anwesend:
+  name: Anwesend
+  initial: on
+  icon: mdi:home
+
+livingroom_partymode:
+  name: Partymodus
+  initial: off
+  icon: mdi:spotlight
+
+coffee:
+  name: Kaffee kochen
+  icon: mdi:coffee
+awake_light:
+  name: Licht an
+  icon: mdi:spotlight
+awake_radio:
+  name: Radio an
+  icon: mdi:radio
+
+steffi_schlafen:
+  name: Schlafen
+  initial: off
+  icon: mdi:hotel
+ingo_schlafen:
+  name: Schlafen
+  initial: off
+  icon: mdi:hotel
+
+sommer_modus:
+  name: Sommer Modus
+  icon: mdi:weather-sunny
+
+essen_kommen:
+ name: Essen kommen
+ icon: mdi:food
+
+livingroom_motion:
+ name: Bewegsmelder
+ icon: mdi:run-fast
+ initial: on
+
+office_motion:
+ name: Bewegungsmelder
+ icon: mdi:run-fast
+ initial: on
+
+workday:
+  name: Arbeitstag
+  icon: mdi:calendar
+

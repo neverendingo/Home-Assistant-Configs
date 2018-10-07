@@ -1,0 +1,204 @@
+############################################################
+# Bewegung im Wohnzimmer
+############################################################
+
+
+- id: "Bewegungsmelder Wohnzimmer"
+  alias: "Bewegungsmelder Wohnzimmer"
+  trigger:
+    platform: state
+    entity_id: input_boolean.livingroom_motion
+    to: "off"
+  action:
+    - service: automation.turn_off
+      entity_id: automation.bewegung_wohnzimmer
+    - service: automation.turn_off
+      entity_id: automation.bewegung_wohnzimmer_aus
+    - service: automation.turn_off
+      entity_id: automation.bewegung_wohnzimmer_nachtmodus
+    - service: automation.turn_off
+      entity_id: automation.bewegung_wohnzimmer_nachtmodus_aus
+
+- id: "Bewegungsmelder Wohnzimmer an"
+  alias: "Bewegungsmelder Wohnzimmer an"
+  trigger:
+    platform: state
+    entity_id: input_boolean.livingroom_motion
+    to: "on"
+  action:
+    - service: automation.turn_on
+      entity_id: automation.bewegung_wohnzimmer
+    - service: automation.turn_on
+      entity_id: automation.bewegung_wohnzimmer_aus
+    - service: automation.turn_on
+      entity_id: automation.bewegung_wohnzimmer_nachtmodus
+    - service: automation.turn_on
+      entity_id: automation.bewegung_wohnzimmer_nachtmodus_aus
+
+
+- id: "Bewegung Wohnzimmer"
+  alias: "Bewegung Wohnzimmer"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.fibaro_livingroom_sensor
+    to: "on"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: group.familie
+        state: "home"
+      - condition: numeric_state
+        entity_id: sensor.fibaro_livingroom_luminance
+        below: 8
+  action:
+    - service: light.turn_on
+      entity_id: group.wohnzimmer_hue
+
+- id: "Bewegung Wohnzimmer Nachtmodus"
+  alias: "Bewegung Wohnzimmer Nachtmodus"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.fibaro_livingroom_sensor
+    to: "on"
+  condition:
+    condition: and
+    conditions:
+      - condition: numeric_state
+        entity_id: sensor.fibaro_livingroom_luminance
+        below: 8
+      - condition: state
+        entity_id: input_boolean.steffi_schlafen
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.ingo_schlafen
+        state: "on"
+  action:
+    - service: hue.hue_activate_scene
+      data:
+        group_name: Wohnzimmer
+        scene_name: "Nachtlicht neu"
+
+  ############################################################
+  # Keine Bewegung im Wohnzimmer mehr
+  ############################################################
+- id: "Bewegung Wohnzimmer aus"
+  alias: "Bewegung Wohnzimmer aus"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.fibaro_livingroom_sensor
+    to: "off"
+    for:
+     minutes: 5
+  action:
+    - service: light.turn_off
+      entity_id: group.wohnzimmer_hue
+
+- id: "Bewegung Wohnzimmer Nachtmodus aus"
+  alias: "Bewegung Wohnzimmer Nachtmodus aus"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.fibaro_livingroom_sensor
+    to: "off"
+    for:
+     minutes: 2
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.steffi_schlafen
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.ingo_schlafen
+        state: "on"
+  action:
+    - service: light.turn_off
+      entity_id: group.wohnzimmer_hue
+
+############################################################
+# Bewegung im Arbeitszimmer
+############################################################
+############################################################
+- id: "Bewegungsmelder Arbeitszimmer aus"
+  alias: "Bewegungsmelder Arbeitszimmer aus"
+  trigger:
+    platform: state
+    entity_id: input_boolean.office_motion
+    to: "off"
+  action:
+    - service: automation.turn_off
+      entity_id: automation.bewegung_arbeitszimmer
+    - service: automation.turn_off
+      entity_id: automation.bewegung_arbeitszimmer_aus
+
+- id: "Bewegungsmelder Arbeitszimmer"
+  alias: "Bewegungsmelder Arbeitszimmer"
+  trigger:
+    platform: state
+    entity_id: input_boolean.office_motion
+    to: "on"
+  action:
+    - service: automation.turn_on
+      entity_id: automation.bewegung_arbeitszimmer
+    - service: automation.turn_on
+      entity_id: automation.bewegung_arbeitszimmer_aus
+
+- id: "Bewegung Arbeitszimmer"
+  alias: "Bewegung Arbeitszimmer"
+  trigger:
+    platform: state
+    entity_id: sensor.arbeitszimmer_bewegung
+    to: "motion detected"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: group.familie
+        state: "home"
+      - condition: numeric_state
+        entity_id: sensor.arbeitszimmer_lux
+        below: 20
+  action:
+    - service: switch.turn_on
+      entity_id: switch.office
+
+- id: "Bewegung Arbeitszimmer LED"
+  alias: "Bewegung Arbeitszimmer LED"
+  trigger:
+    platform: state
+    entity_id: sensor.arbeitszimmer_bewegung
+    to: "motion detected"
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.office_led
+        color_name: "blue"
+        brightness: 255
+
+- id: "Bewegung Arbeitszimmer LED aus"
+  alias: "Bewegung Arbeitszimmer LED aus"
+  trigger:
+    platform: state
+    entity_id: sensor.arbeitszimmer_bewegung
+    to: "standby"
+    for:
+     minutes: 5
+  action:
+    - service: light.turn_off
+      entity_id: light.office_led
+
+  ############################################################
+  # Keine Bewegung im Arbeitszimmer mehr
+  ############################################################
+- id: "Bewegung Arbeitszimmer aus"
+  alias: "Bewegung Arbeitszimmer aus"
+  trigger:
+    platform: state
+    entity_id: sensor.arbeitszimmer_bewegung
+    to: "standby"
+    for:
+     minutes: 5
+  action:
+    - service: switch.turn_off
+      entity_id: switch.office
+

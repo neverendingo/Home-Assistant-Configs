@@ -1,0 +1,47 @@
+############################################################
+# View
+############################################################
+people:
+  view: yes
+  entities:
+    - sun.sun
+    - group.ingo
+    - group.steffi
+    - group.alarm_clock
+    - group.all_devices
+    - group.termine
+  icon: mdi:account-multiple
+
+############################################################
+# Groups
+############################################################
+ingo:
+  name: Ingo
+  entities:
+    - device_tracker.ingo_motog5
+    - sensor.ingo_battery
+    - input_boolean.ingo_schlafen
+
+steffi:
+  name: Steffi
+  entities:
+    - device_tracker.steffi_motog3
+    - input_boolean.steffi_schlafen
+
+termine:
+    - sensor.template_calendar_birthdays
+    - sensor.frikatermine
+    - sensor.feiertage_in_deutschland
+
+alarm_clock:
+  name: 'Wecker'
+  entities:
+    - input_boolean.alarm_aktiv
+    - sensor.alarm_clock_time
+    - input_number.alarm_clock_hour
+    - input_number.alarm_clock_minute
+    - switch.wecker
+    - input_boolean.coffee
+    - input_boolean.awake_light
+    - input_boolean.awake_radio
+    - input_select.timer_radio_station

@@ -1,0 +1,84 @@
+############################################################
+# Telegram Commands
+############################################################
+
+- alias: "Telegram - Licht im Wohnzimmer an"
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      command: '/wohnzimmer'
+  action:
+    - service: homeassistant.toggle
+      entity_id: light.wohnzimmer_lichter
+    - service: telegram_bot.send_message
+      data_template:
+        target: !secret chatid_1
+        message: "Wohnzimmerlichter sind nun {{ states('light.wohnzimmer_lichter') }}."
+
+- alias: "Telegram - Licht im Arbeitszimmer an"
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      command: '/arbeitszimmer'
+  action:
+    - service: homeassistant.toggle
+      entity_id: light.arbeitszimmer_lichter
+    - service: telegram_bot.send_message
+      data_template:
+        target: !secret chatid_1
+        message: "Arbeitszimmerlichter sind nun {{ states('light.wohnzimmer_lichter') }}."
+
+- alias: "Telegram - Status"
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+        command: '/status'
+  action:
+    service: telegram_bot.send_message
+    data_template:
+      target: !secret chatid_1
+      message: "System ist online!
+
+        Die Geräte sind hier:
+        {% for state in states.device_tracker %}
+          {{- state.name }} - {{ state.state_with_unit }}
+        {% endfor %}
+
+        Lichter sind -
+        {% for state in states.light %}
+          {{- state.name }} - {{ state.state_with_unit }}
+        {% endfor %}"
+      keyboard: ["/lichter", "/menu"]
+
+- alias: "Telegram - Menu"
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+        command: '/menu'
+  action:
+      service: telegram_bot.send_message
+      data_template:
+        target: !secret chatid_1
+        message: "Kommandos..."
+        keyboard: ["/lichter", "/status"]
+
+- alias: "Telegram - Lichter"
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      command: '/lichter'
+  action:
+    service: telegram_bot.send_message
+    data_template:
+      target: !secret chatid_1
+      message: "Lichter sind -
+        {% for state in states.light %}
+          {{- state.name }} - {{ state.state_with_unit }}
+        {% endfor %}"
+      keyboard: ["/wohnzimmer", "/arbeitszimmer", "/menu"]
+

@@ -1,0 +1,3 @@
+sensor.fibaro_livingroom_seismic_intensity:
+  ignored: true
+  polling_intensity: 0

@@ -1,0 +1,132 @@
+############################################################
+# Views
+############################################################
+group.default_view:
+  order: 1
+group.media:
+  order: 3
+group.people:
+  order: 2
+group.settings:
+  order: 4
+
+############################################################
+# Groups
+############################################################
+group.all_devices:
+  friendly_name: Alle Geräte
+  hidden: false
+  icon: mdi:human-male-female
+
+group.termine:
+  friendly_name: Termine
+
+group.wetter:
+  friendly_name: Wetter
+group.wetter_klein:
+  friendly_name: Wetter
+
+group.all_automations:
+  hidden: false
+
+media_player.kodi:
+  order: 1
+group.music:
+  friendly_name: Musik
+  order: 3
+
+group.familie:
+  friendly_name: Familie
+
+group.main:
+  friendly_name: Main
+
+group.licht:
+  friendly_name: Licht
+
+group.speedtest:
+  friendly_name: Netzwerk
+
+group.sensoren:
+  friendly_name: Sensoren
+
+group.office_room:
+  friendly_name: Arbeitszimmer
+
+group.bed_room:
+  friendly_name: Schlafzimmer
+
+group.livingroom:
+  friendly_name: Wohnzimmer
+
+############################################################
+# Sensors
+############################################################
+
+sensor.owm_condition:
+  friendly_name: Wetterbedingung
+sensor.owm_cloud_coverage:
+  friendly_name: Wolkenbedeckung
+sensor.owm_forecast:
+  friendly_name: Vorhersage
+sensor.owm_rain:
+  friendly_name: Regen
+sensor.owm_snow:
+  friendly_name: Schnee
+sensor.owm_temperature:
+  friendly_name: Temperatur
+sensor.owm_humidity:
+  friendly_name: Luftfeuchtigkeit
+sensor.owm_pressure:
+  friendly_name: Luftdruck
+sensor.owm_wind_bearing:
+  friendly_name: Windrichtung
+sensor.owm_wind_speed:
+  friendly_name: Windgeschwindigkeit
+
+sensor.arbeitszimmer_luftfeuchtigkeit:
+  icon: mdi:water-percent
+
+sensor.moon:
+  friendly_name: Mond
+
+############################################################
+# Switches
+############################################################
+
+switch.office:
+  friendly_name: Arbeitszimmer
+switch.livingroom_1:
+  friendly_name: "Bücherregal"
+switch.livingroom_2:
+  friendly_name: "Hauptlicht"
+switch.leseecke:
+  friendly_name: "Leseecke Lampe"
+
+############################################################
+# other
+############################################################
+input_slider.alarm_clock_hour:
+  friendly_name: 'Stunde'
+  icon: mdi:timer
+input_slider.alarm_clock_minute:
+  friendly_name: 'Minute'
+  icon: mdi:timer
+sensor.alarm_clock_hour:
+  hidden: true
+sensor.alarm_clock_minute:
+  hidden: true
+sensor.alarm_clock_time:
+  friendly_name: 'Wecker Einstellung'
+  icon: mdi:alarm
+scene.sleeping_steffi:
+  friendly_name: "Schlafen gehen"
+scene.movies:
+  friendly_name: "Gemütlich fernsehen"
+scene.radio:
+  friendly_name: "Radio hören"
+
+scene.office_room:
+  friendly_name: "Licht Arbeitszimmer"
+scene.radio_office:
+  friendly_name: "Radio im Arbeitszimmer"

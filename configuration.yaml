@@ -1,0 +1,144 @@
+############################################################
+#                                                          #
+# Home Assistant Main Configuration File                   #
+#                                                          #
+############################################################
+
+homeassistant:
+  name: FrikaHome
+  latitude: !secret lat
+  longitude: !secret lot
+  elevation: 77
+  unit_system: metric
+  time_zone: "Europe/Berlin"
+  customize: !include includes/customize.yaml
+
+http:
+  # Uncomment this to add a password (recommended!)
+  #api_password: !secret http_password
+  #trusted_networks:
+  #  - 192.168.0.0/24
+updater:
+discovery:
+conversation:
+history:
+map:
+recorder:
+  purge_interval: 14
+  purge_keep_days: 13
+  exclude:
+    domains:
+      - automation
+      - weblink
+      - updater
+
+config:
+python_script:
+sun:
+frontend:
+  javascript_version: latest
+
+device_sun_light_trigger:
+  light_group: group.wohnzimmer_hue
+  light_profile: "Herbst"
+  device_group: group.familie
+  disable_turn_off: 1
+
+############################################################
+#                                                          #
+# Components                                               #
+#                                                          #
+############################################################
+
+mqtt:
+  broker: 127.0.0.1
+  port: 1883
+
+tts:
+  - platform: google
+    cache: true
+    cache_dir: /tmp/tts
+    time_memory: 300
+    language: 'de'
+
+google:
+  client_id: !secret google_client
+  client_secret: !secret google_client_secret
+
+ifttt:
+  key: !secret ifttt_key
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_api
+    allowed_chat_ids:
+      - !secret chatid_1
+      - !secret chatid_2
+
+
+weblink:
+  entities:
+    - name: Router
+      url: !secret router_ip
+    - name: Drucker
+      url: !secret printer_ip
+
+ffmpeg:
+
+duckdns:
+  domain: frikahome
+  access_token: !secret duckdns_token
+
+zwave:
+  usb_path: /dev/ttyACM0
+#  autoheal: false
+  network_key: !secret zwave_key
+  device_config: !include zwave_device_config.yaml
+
+emulated_hue:
+  #listen_port: 80
+
+timer:
+  erinnerung:
+
+weather:
+  - platform: yweather
+    woeid: !secret ywoeid
+    name: Wetter
+
+############################################################
+#                                                          #
+# Single Configs                                           #
+#                                                          #
+############################################################
+media_player: !include includes/media_players.yaml
+device_tracker: !include includes/device_trackers.yaml
+binary_sensor: !include includes/binary_sensor.yaml
+sensor: !include includes/sensors.yaml
+notify: !include includes/notify.yaml
+switch: !include includes/switch.yaml
+input_number: !include includes/input_slider.yaml
+input_select: !include includes/input_select.yaml
+input_boolean: !include includes/input_boolean.yaml
+scene: !include includes/scenes.yaml
+#snips:
+#intent_script: !include includes/snips.yaml
+light: !include includes/light.yaml
+
+############################################################
+#                                                          #
+# Merged Configs                                           #
+#                                                          #
+############################################################
+zone: !include_dir_merge_list includes/zone
+automation: !include_dir_merge_list includes/automation
+
+
+############################################################
+#                                                          #
+# Merged Names                                             #
+#                                                          #
+############################################################
+group: !include_dir_merge_named includes/group
+script: !include_dir_merge_named includes/scripts
+

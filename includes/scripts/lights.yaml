@@ -1,0 +1,11 @@
+essen_kommen:
+  alias: Essen kommen
+  sequence:
+    - service: light.turn_on
+      data:
+        entity_id: light.office_led
+        color_name: "red"
+        brightness: 255
+        flash: "long"
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.essen_kommen

@@ -1,0 +1,17 @@
+- platform: telegram
+  name: frika_bot
+  chat_id: !secret chatid_1
+
+- platform: telegram
+  name: frika_bot_private
+  chat_id: !secret chatid_2
+
+- platform: group
+  name: notify_group
+  services:
+    - service: frika_bot
+
+- platform: group
+  name: notify_ingo
+  services:
+    - service: frika_bot_private

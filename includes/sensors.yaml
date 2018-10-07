@@ -1,0 +1,116 @@
+############################################################
+# Home Assistant Sensors
+############################################################
+
+- platform: moon
+
+- platform: openweathermap
+  api_key: !secret owm_key
+  forecast: true
+  language: de
+  monitored_conditions:
+    - weather
+    - temperature
+    - wind_speed
+    - humidity
+    - pressure
+    - clouds
+    - rain
+    - snow
+
+- platform: speedtest
+  minute:
+    - 0
+    - 15
+    - 30
+    - 45
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+
+- platform: template
+  sensors:
+    alarm_clock_hour:
+      value_template: '{{ states("input_number.alarm_clock_hour") | round(0) }}'
+    alarm_clock_minute:
+      value_template: '{{ states("input_number.alarm_clock_minute") | round(0) }}'
+    alarm_clock_time:
+      value_template: '{{ states("sensor.alarm_clock_hour") }}:{% if states("sensor.alarm_clock_minute")|length == 1 %}0{% endif %}{{ states("sensor.alarm_clock_minute") }}'
+
+    frikatermine:
+      friendly_name: "FrikaTermine"
+      value_template: >
+        {%- if states.calendar.frikatermine %}{{states.calendar.frikatermine.attributes.message}} ({{strptime(states.calendar.frikatermine.attributes.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d. %B, %H:%M:%S ") }}) {%- endif %}
+    feiertage_in_deutschland:
+      friendly_name: "Feiertage in Deutschland"
+      value_template: >
+        {%- if states.calendar.feiertage_in_deutschland %}{{states.calendar.feiertage_in_deutschland.attributes.message}} ({{strptime(states.calendar.feiertage_in_deutschland.attributes.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d. %B") }}) {%- endif %}
+
+    ingo_battery:
+      value_template: '{{states.device_tracker.ingo_motog5.attributes.battery}}'
+      unit_of_measurement: '%'
+      friendly_name: 'Ingo Moto G5 Akku'
+    anwesend:
+      value_template: '{{ states("input_boolean.anwesend") }}'
+    urlaub:
+      value_template: '{{ states("input_boolean.urlaub") }}'
+
+    steffi_schlafen:
+      value_template: '{{ states("input_boolean.steffi_schlafen") }}'
+    ingo_schlafen:
+      value_template: '{{ states("input_boolean.ingo_schlafen") }}'
+
+    template_calendar_birthdays:
+      value_template: >
+        {{ states.calendar.contacts.attributes.message }}
+        ({{ strptime(states.calendar.contacts.attributes.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d. %B") }})
+      friendly_name: Geburtstage
+      unit_of_measurement: ''
+
+- platform: systemmonitor
+  resources:
+  - type: disk_use_percent
+    arg: /
+  - type: memory_free
+  - type: processor_use
+  - type: network_in
+    arg: wlan0
+  - type: network_out
+    arg: wlan0
+  - type: last_boot
+
+
+- platform: mqtt
+  state_topic: "home/who_cooks"
+  name: "Wer kocht"
+
+- platform: mqtt
+  state_topic: "frika/sensornode1"
+  name: "Arbeitszimmer Luftfeuchtigkeit"
+  unit_of_measurement: "%"
+  value_template: '{{ value_json.humidity | round(1) }}'
+
+- platform: mqtt
+  state_topic: "frika/sensornode1"
+  name: "Arbeitszimmer Lux"
+  ##This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+  unit_of_measurement: "LUX"
+  value_template: '{{ value_json.ldr }}'
+
+- platform: mqtt
+  state_topic: "frika/sensornode1"
+  name: "Arbeitszimmer Bewegung"
+  value_template: '{{ value_json.motion }}'
+
+- platform: mqtt
+  state_topic: "frika/sensornode1"
+  name: "Arbeitszimmer Temperatur"
+  unit_of_measurement: "°C"
+  value_template: '{{ value_json.temperature | round(1) }}'
+
+- platform: mqtt
+  state_topic: "frika/sensornode1"
+  name: "Arbeitszimmer gef. Temperatur"
+  unit_of_measurement: "°C"
+  value_template: '{{ value_json.heatIndex | round(1) }}'

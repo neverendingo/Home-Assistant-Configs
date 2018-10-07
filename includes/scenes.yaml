@@ -1,0 +1,71 @@
+- name: movies
+  entities:
+    switch.livingroom_1: on
+    switch.livingroom_2: off
+
+- name: office room
+  entities:
+    switch.office: on
+    switch.leseecke: on
+
+- name: all on
+  entities:
+    switch.livingroom_1: on
+    switch.livingroom_2: on
+    switch.office: on
+    switch.leseecke: on
+
+- name: radio
+  entities:
+    switch.kodi_radio: on
+
+- name: radio_office
+  entities:
+    switch.gibson_radio: on
+
+- name: Livingroom normal
+  entities:
+   light.lampe_2:
+     state: on
+     transition: 2
+     brightness_pct: 85
+   light.lampe_1:
+     state: on
+     transition: 2
+     brightness_pct: 60
+   light.lampe_3:
+     state: on
+     transition: 2
+     brightness_pct: 70
+- name: Livingroom dim
+  entities:
+   light.lampe_2:
+     state: on
+     transition: 2
+     brightness_pct: 55
+   light.lampe_1:
+     state: on
+     transition: 2
+     brightness_pct: 20
+   light.lampe_3:
+     state: on
+     transition: 2
+     brightness_pct: 40
+
+- name: sleeping_steffi
+  entities:
+    script.sleeping_steffi: on
+
+- name: Lesen Wohnzimmer
+  entities:
+    group.all_lights:
+      state: on
+      transition: 2
+      profile: reading
+    switch.livingroom_2: on
+    switch.livingroom_1: off
+
+
+- name: Lesen Arbeitszimmer
+  entities:
+    switch.leseecke: on

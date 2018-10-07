@@ -1,0 +1,53 @@
+- platform: rpi_rf
+  gpio: 17
+  switches:
+    office:
+      code_on: 14013452
+      code_off: 14013443
+      signal_repetitions: 15
+    livingroom_1:
+      code_on: 13988876
+      code_off: 13988867
+      signal_repetitions: 15
+    livingroom_2:
+      code_on: 13982732
+      code_off: 13982723
+      signal_repetitions: 15
+
+- platform: command_line
+  switches:
+    kodi_playlist:
+      command_on: "/home/homeassistant/start_playlist.sh"
+      command_off: "/home/homeassistant/stop_playlist.sh"
+      friendly_name: Starte Playlist
+    kodi_radio:
+      command_on: "/home/homeassistant/start_radio.sh"
+      command_off: "/home/homeassistant/stop_playlist.sh"
+      friendly_name: Starte Radio im Wohnzimmer
+    gibson_radio:
+      command_on: "/home/homeassistant/start_radio_office.sh"
+      command_off: "/home/homeassistant/stop_radio_office.sh"
+      friendly_name: Starte Radio im Arbeitszimmer
+    all_radio:
+      command_on: "/home/homeassistant/start_radio_all.sh"
+      command_off: "/home/homeassistant/stop_radio_all.sh"
+      friendly_name: Starte Radio überall
+    mute_gibson:
+      command_on: "/home/homeassistant/mute_gibson.sh"
+      command_off: "/home/homeassistant/unmute_gibson.sh"
+      friendly_name: PC stummschalten
+    mute_monitor:
+      command_on: "/home/homeassistant/mute_monitor.sh"
+      command_off: "/home/homeassistant/unmute_monitor.sh"
+      friendly_name: Monitor aus
+    kaffeemaschine:
+      command_on: "home/homeassistant/bin/send 2630859776"
+      command_off: "home/homeassistant/bin/send 2463087616"
+    leseecke:
+      command_on: "home/homeassistant/bin/send 2899295232"
+      command_off: "home/homeassistant/bin/send 2731523072"
+    effects:
+      friendly_name: Effekte
+      command_on: "home/homeassistant/bin/send 2194652160"
+      command_off: "home/homeassistant/bin/send 2328869888"
+

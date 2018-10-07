@@ -1,0 +1,15 @@
+############################################################
+# Kaffeemaschine sollte nicht länger als eine Stunde laufen
+############################################################
+- id: "Kaffeemaschine aus"
+  alias: "Kaffeemaschine aus"
+  trigger:
+    platform: state
+    entity_id: switch.kaffeemaschine
+    to: "on"
+    for:
+     hours: 1
+  action:
+    - service: switch.turn_off
+      entity_id: switch.kaffeemaschine
+
