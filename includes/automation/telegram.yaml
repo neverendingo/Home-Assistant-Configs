@@ -14,7 +14,9 @@
     - service: telegram_bot.send_message
       data_template:
         target: !secret chatid_1
-        message: "Wohnzimmerlichter sind nun {{ states('light.wohnzimmer_lichter') }}."
+        message: "Wohnzimmerlichter sind nun {{ states('light.wohnzimmer_lichter') }}.
+
+        "
 
 - alias: "Telegram - Licht im Arbeitszimmer an"
   trigger:
@@ -28,7 +30,9 @@
     - service: telegram_bot.send_message
       data_template:
         target: !secret chatid_1
-        message: "Arbeitszimmerlichter sind nun {{ states('light.wohnzimmer_lichter') }}."
+        message: "Arbeitszimmerlichter sind nun {{ states('light.wohnzimmer_lichter') }}.
+
+        "
 
 - alias: "Telegram - Status"
   trigger:
@@ -43,15 +47,28 @@
       message: "System ist online!
 
         Die Geräte sind hier:
+
         {% for state in states.device_tracker %}
           {{- state.name }} - {{ state.state_with_unit }}
+
+        {% endfor %}
+
+        Die Heizungen zeigen die Temperatur:
+
+        {% for state in states.climate %}
+          {{- state.name }} - {{ state.attributes.current_temperature }} (eingestellt auf {{ state.attributes.temperature }})
+
         {% endfor %}
 
         Lichter sind -
+
         {% for state in states.light %}
           {{- state.name }} - {{ state.state_with_unit }}
-        {% endfor %}"
-      keyboard: ["/lichter", "/menu"]
+
+        {% endfor %}
+
+        "
+      keyboard: ["/lichter, /heizung", "/menu"]
 
 - alias: "Telegram - Menu"
   trigger:
@@ -63,8 +80,10 @@
       service: telegram_bot.send_message
       data_template:
         target: !secret chatid_1
-        message: "Kommandos..."
-        keyboard: ["/lichter", "/status"]
+        message: "Kommandos...
+
+        "
+        keyboard: ["/lichter, /heizung", "/status"]
 
 - alias: "Telegram - Lichter"
   trigger:
@@ -77,8 +96,32 @@
     data_template:
       target: !secret chatid_1
       message: "Lichter sind -
+
         {% for state in states.light %}
           {{- state.name }} - {{ state.state_with_unit }}
-        {% endfor %}"
-      keyboard: ["/wohnzimmer", "/arbeitszimmer", "/menu"]
+
+        {% endfor %}
+
+        "
+      keyboard: ["/wohnzimmer", "/arbeitszimmer", "/status, /heizung", "/menu"]
+
+- alias: "Telegram - Heizungen"
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      command: '/heizung'
+  action:
+    service: telegram_bot.send_message
+    data_template:
+      target: !secret chatid_1
+      message: "Die Heizungen zeigen die Temperatur -
+
+        {% for state in states.climate %}
+          {{- state.name }} - {{ state.attributes.current_temperature }} (eingestellt auf {{ state.attributes.temperature }})
+
+        {% endfor %}
+
+        "
+      keyboard: ["/wohnzimmer", "/arbeitszimmer", "/status, /lichter", "/menu"]
 
