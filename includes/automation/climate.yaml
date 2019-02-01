@@ -1,232 +1,286 @@
-############################################################
-# Die Heizung für die Nacht runterregeln
-############################################################
-- id: "Heizung bei Nacht"
-  alias: "Heizung bei Nacht"
+#############################################################
+## Die Heizungssteuerung
+#############################################################
+
+- alias: "Heizung Wochentags HEAT"
   trigger:
-    platform: time
-    at: "23:00:00"
+    platform: state
+    entity_id: sensor.current_heating_mode
   condition:
-      condition: template
-      value_template: '{{ is_state("input_boolean.sommer_modus", "off") }}'
+    condition: or
+    conditions:
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochentag Morgen" }}'
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochenende Morgen" }}'
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochentag tagsüber" }}'
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochenende tagsüber"}}'
   action:
-    - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 16
     - service: climate.set_operation_mode
+      entity_id:
+        - climate.heating_office
+        - climate.heating_livingroom
+        - climate.heating_hall
+        - climate.heating_kitchen
       data:
-        entity_id: climate.heating_office
-        operation_mode: "Heat Eco"
+        operation_mode: 'Heat'
+    - service: climate.set_temperature
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_livingroom
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_livingroom_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
+    - service: climate.set_temperature
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_office
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_office_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
+    - service: climate.set_temperature
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_hall
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_hall_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
+    - service: climate.set_temperature
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_kitchen
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_kitchen_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
+    - service: climate.set_temperature
+      data_template:
+        entity_id: climate.heating_bedroom
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
 
-############################################################
-# Die Heizung am Tag wieder hochfahren
-############################################################
-- id: "Heizung am Tag"
-  alias: "Heizung am Tag"
+- alias: "Heizung Wochentags HEAT Eco"
   trigger:
-    platform: time
-    at: "05:30:00"
+    platform: state
+    entity_id: sensor.current_heating_mode
   condition:
-      condition: template
-      value_template: '{{ is_state("input_boolean.sommer_modus", "off") }}'
-  action:
-    - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 20
-    - service: climate.set_operation_mode
-      entity_id: climate.heating_office
-      data:
-        entity_id: climate.heating_office
-        operation_mode: "Heat"
-
-############################################################
-# Die Heizung bei Abwesenheit runterfahren
-############################################################
-- id: "Heizung bei Abwesenheit aus"
-  alias: "Heizung bei Abwesenheit aus"
-  trigger:
-    platform: state
-    entity_id: group.familie
-    to: 'not_home'
-  condition:
-      condition: template
-      value_template: '{{ is_state("input_boolean.sommer_modus", "off") }}'
-  action:
-    - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 16
-    - service: climate.set_operation_mode
-      entity_id: climate.heating_office
-      data:
-        entity_id: climate.heating_office
-        operation_mode: "Off"
-
-############################################################
-# Die Heizung bei Anwesenheit hochfahren
-############################################################
-- id: "Heizung bei Anwesenheit an"
-  alias: "Heizung bei Anwesenheit an"
-  trigger:
-    platform: state
-    entity_id: group.familie
-    to: 'not_home'
-  condition:
-      condition: template
-      value_template: '{{ is_state("input_boolean.sommer_modus", "off") }}'
-  action:
-    - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 20
-    - service: climate.set_operation_mode
-      entity_id: climate.heating_office
-      data:
-        entity_id: climate.heating_office
-        operation_mode: "Heat"
-
-################################################################
-# für den Danfoss Thermo die Temperatur vom Multisensor nehmen
-################################################################
-- id: "Heizungstemperatur setzen"
-  alias: 'Heizungstemperatur setzen'
-  trigger:
-    platform: state
-    entity_id:
-      - sensor.fibaro_livingroom_temperature
-      - climate.heating_livingroom
-  action:
-    service: python_script.update_thermostat
-    data_template:
-      thermostat: climate.heating_livingroom
-      sensor: sensor.fibaro_livingroom_temperature
-
-- id: "Heizungstemperatur beim Start setzen"
-  alias: 'Heizungstemperatur beim Start setzen'
-  trigger:
-    platform: homeassistant
-    event: start
-  action:
-    - service: python_script.update_thermostat
-      data:
-        thermostat: climate.heating_livingroom
-        sensor: sensor.fibaro_livingroom_temperature
-
-################################################################
-# Heizung Sommermodus
-################################################################
-- id: "Heizungen im Sommermodus"
-  alias: "Heizungen im Sommermodus"
-  trigger:
-    platform: state
-    entity_id: input_boolean.sommer_modus
-    to: "on"
+    condition: or
+    conditions:
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochentag Abend" }}'
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochenende Abend" }}'
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochentag Nachts" }}'
+      - condition: template
+        value_template: '{{ states.sensor.current_heating_mode.state == "Wochenende Nachts"}}'
   action:
     - service: climate.set_operation_mode
-      entity_id: climate.heating_office
+      entity_id:
+        - climate.heating_office
+        - climate.heating_livingroom
+        - climate.heating_hall
+        - climate.heating_kitchen
       data:
-        entity_id: climate.heating_office
-        operation_mode: "Off"
+        operation_mode: 'Heat Eco'
     - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 7
-    - service: automation.turn_off
-      entity_id: automation.heizung_am_tag
-    - service: automation.turn_off
-      entity_id: automation.heizung_bei_anwesenheit_an
-    - service: automation.turn_off
-      entity_id: automation.heizung_bei_nacht
-
-################################################################
-# Heizung Wintermodus
-################################################################
-- id: "Heizungen im Wintermodus"
-  alias: "Heizungen im Windermodus"
-  trigger:
-    platform: state
-    entity_id: input_boolean.sommer_modus
-    to: "off"
-  action:
-    - service: climate.set_operation_mode
-      entity_id: climate.heating_office
-      data:
-        entity_id: climate.heating_office
-        operation_mode: "Heat"
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_livingroom
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_livingroom_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
     - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 20
-    - service: automation.turn_on
-      entity_id: automation.heizung_am_tag
-    - service: automation.turn_on
-      entity_id: automation.heizung_bei_anwesenheit_an
-    - service: automation.turn_on
-      entity_id: automation.heizung_bei_nacht
-
-################################################################
-# Heizung Arbeitstag umschalten
-################################################################
-- id: "Arbeitstag Schalter"
-  alias: "Arbeitstag Schalter"
-  trigger:
-    platform: state
-    entity_id: binary_sensor.workday_sensor
-    to: "on"
-  action:
-    service: input_boolean.turn_on
-    entity_id: input_boolean.workday
-- id: "Arbeitstag Schalter aus"
-  alias: "Arbeitstag Schalter aus"
-  trigger:
-    platform: state
-    entity_id: binary_sensor.workday_sensor
-    to: "off"
-  action:
-    service: input_boolean.turn_off
-    entity_id: input_boolean.workday
-
-################################################################
-# Heizung Arbeitstag
-################################################################
-- id: "Heizung aus bei Arbeit"
-  alias: "Heizung aus bei Arbeit"
-  trigger:
-    platform: time
-    at: "08:00:00"
-  condition:
-    condition: state
-    entity_id: binary_sensor.workday_sensor
-    state: 'on'
-  action:
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_office
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_office_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
     - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 16
-    - service: climate.set_operation_mode
-      entity_id: climate.heating_office
-      data:
-        entity_id: climate.heating_office
-        operation_mode: "Off"
-
-- id: "Heizung an nach Arbeit"
-  alias: "Heizung an nach Arbeit"
-  trigger:
-    platform: time
-    at: "15:00:00"
-  condition:
-    condition: state
-    entity_id: binary_sensor.workday_sensor
-    state: 'on'
-  action:
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_hall
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_hall_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
     - service: climate.set_temperature
-      entity_id: climate.heating_livingroom
-      data:
-        temperature: 20
-    - service: climate.set_operation_mode
-      entity_id: climate.heating_office
-      data:
-        entity_id: climate.heating_office
-        operation_mode: "Heat"
+      data_template:
+        entity_id: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') or is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}
+              climate.heating_kitchen
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') or is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}
+              climate.heating_kitchen_eco
+            {%- endif -%}
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
+    - service: climate.set_temperature
+      data_template:
+        entity_id: climate.heating_bedroom
+        temperature: >
+            {%- if is_state('sensor.current_heating_mode', 'Wochentag Morgen') or is_state('sensor.current_heating_mode', 'Wochenende Morgen') -%}{{ states.input_number.morning_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag tagsüber') or is_state('sensor.current_heating_mode', 'Wochenende tagsüber') -%}{{ states.input_number.daytime_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Abend') or is_state('sensor.current_heating_mode', 'Wochenende Abend') -%}{{ states.input_number.evening_temp.state }}
+            {%- elif is_state('sensor.current_heating_mode', 'Wochentag Nachts') or is_state('sensor.current_heating_mode', 'Wochenende Nachts') -%}{{ states.input_number.nighttime_temp.state }}
+            {%- endif %}
+
+
+#################################################################
+## für den Danfoss Thermo die Temperatur vom Multisensor nehmen
+#################################################################
+##- id: "Heizungstemperatur setzen"
+  ##alias: 'Heizungstemperatur setzen'
+  ##trigger:
+    ##platform: state
+    ##entity_id:
+      ##- sensor.fibaro_livingroom_temperature
+      ##- climate.heating_livingroom
+  ##action:
+    ##service: python_script.update_thermostat
+    ##data_template:
+      ##thermostat: climate.heating_livingroom
+      ##sensor: sensor.fibaro_livingroom_temperature
+
+##- id: "Heizungstemperatur beim Start setzen"
+  ##alias: 'Heizungstemperatur beim Start setzen'
+  ##trigger:
+    ##platform: homeassistant
+    ##event: start
+  ##action:
+    ##- service: python_script.update_thermostat
+      ##data:
+        ##thermostat: climate.heating_livingroom
+        ##sensor: sensor.fibaro_livingroom_temperature
+
+#################################################################
+## Heizung Sommermodus
+#################################################################
+#- id: "Heizungen im Sommermodus"
+  #alias: "Heizungen im Sommermodus"
+  #trigger:
+    #platform: state
+    #entity_id: input_boolean.sommer_modus
+    #to: "on"
+  #action:
+    #- service: climate.set_operation_mode
+      #entity_id: climate.heating_office
+      #data:
+        #entity_id: climate.heating_office
+        #operation_mode: "Off"
+    #- service: climate.set_operation_mode
+      #data:
+        #entity_id: climate.heating_livingroom
+        #operation_mode: "Off"
+    #- service: climate.set_operation_mode
+      #data:
+        #entity_id: climate.heating_kitchen
+        #operation_mode: "Off"
+    #- service: climate.set_operation_mode
+      #data:
+        #entity_id: climate.heating_hall
+        #operation_mode: "Off"
+    #- service: climate.set_temperature
+      #entity_id: climate.heating_bedroom
+      #data:
+        #temperature: 7
+    #- service: automation.turn_off
+      #entity_id: automation.heizung_am_tag
+    #- service: automation.turn_off
+      #entity_id: automation.heizung_bei_nacht
+
+#################################################################
+## Heizung Wintermodus
+#################################################################
+#- id: "Heizungen im Wintermodus"
+  #alias: "Heizungen im Windermodus"
+  #trigger:
+    #platform: state
+    #entity_id: input_boolean.sommer_modus
+    #to: "off"
+  #action:
+    #- service: climate.set_operation_mode
+      #entity_id: climate.heating_office
+      #data:
+        #entity_id: climate.heating_office
+        #operation_mode: "Heat"
+    #- service: climate.set_operation_mode
+      #data:
+        #entity_id: climate.heating_livingroom
+        #operation_mode: "Heat"
+    #- service: climate.set_operation_mode
+      #data:
+        #entity_id: climate.heating_kitchen
+        #operation_mode: "Heat"
+    #- service: climate.set_operation_mode
+      #data:
+        #entity_id: climate.heating_hall
+        #operation_mode: "Heat"
+    #- service: climate.set_temperature
+      #entity_id: climate.heating_bedroom
+      #data:
+        #temperature: 20
+    #- service: automation.turn_on
+      #entity_id: automation.heizung_am_tag
+    #- service: automation.turn_on
+      #entity_id: automation.heizung_bei_anwesenheit_an
+    #- service: automation.turn_on
+      #entity_id: automation.heizung_bei_nacht
+

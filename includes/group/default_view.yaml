@@ -30,7 +30,7 @@ familie:
     - device_tracker.steffi_motog3
 
 livingroom:
-    - light.livingroom_leselicht
+    - light.onoff_plug_1_4
     - light.livingroom_buecher
     - light.lampe_1
     - light.lampe_2
@@ -47,14 +47,15 @@ wohnzimmer_hue:
     - light.lampe_3
 
 office_room:
-    - light.office
-    - light.office_leseecke
+    - light.onoff_plug_1_2
+    - light.onoff_plug_1_2
     - climate.heating_office
     - climate.heating_office_eco
     - sensor.arbeitszimmer_temperatur
     - sensor.arbeitszimmer_gef_temperatur
     - sensor.arbeitszimmer_luftfeuchtigkeit
     - light.office_led
+    - light.arbeitszimmer_strip
     - input_boolean.essen_kommen
     - scene.office_room
     - input_boolean.office_motion

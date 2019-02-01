@@ -38,3 +38,31 @@ Video:
     #- script.get_recent_movies
     #- script.get_recent_albums
     #- script.get_recent_episodes
+
+my_player:
+    name: Squeezebox Controls
+    entities:
+    - input_select.lms_player
+    - input_number.lms_volume
+    - input_number.lms_sleep_time
+    - input_select.lms_source
+    - input_text.lms_artist
+    - input_text.lms_album
+    - input_text.lms_song
+    - input_text.lms_playlist
+    - input_select.lms_command
+    - script.lms_cmd_pause_player
+    - script.lms_cmd_start_player
+    - script.lms_cmd_next_track
+    - input_boolean.lms_shuffle
+    - input_boolean.lms_repeat
+
+lms_sync_players:
+    name: Liste der Player
+    entities:
+    - input_select.lms_sync_master
+    - input_boolean.lms_player1_sync
+    - input_boolean.lms_player2_sync
+    - input_boolean.lms_player3_sync
+    - input_boolean.lms_player4_sync
+    - input_boolean.lms_player5_sync

@@ -45,15 +45,20 @@
   condition:
     condition: and
     conditions:
-      - condition: state
-        entity_id: group.familie
-        state: "home"
       - condition: numeric_state
         entity_id: sensor.fibaro_livingroom_luminance
-        below: 8
+        below: 15
+      - condition: state
+        entity_id: input_boolean.livingroom_motion
+        state: "on"
+      - condition: state
+        entity_id: group.wohnzimmer_hue
+        state: "off"
   action:
     - service: light.turn_on
       entity_id: group.wohnzimmer_hue
+
+
 
 - id: "Bewegung Wohnzimmer Nachtmodus"
   alias: "Bewegung Wohnzimmer Nachtmodus"
@@ -90,6 +95,12 @@
     to: "off"
     for:
      minutes: 5
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: group.wohnzimmer_hue
+        state: "on"
   action:
     - service: light.turn_off
       entity_id: group.wohnzimmer_hue
@@ -110,6 +121,9 @@
         state: "on"
       - condition: state
         entity_id: input_boolean.ingo_schlafen
+        state: "on"
+      - condition: state
+        entity_id: group.wohnzimmer_hue
         state: "on"
   action:
     - service: light.turn_off
@@ -148,16 +162,19 @@
   trigger:
     platform: state
     entity_id: sensor.arbeitszimmer_bewegung
-    to: "motion detected"
+    to: "on"
   condition:
     condition: and
     conditions:
-      - condition: state
-        entity_id: group.familie
-        state: "home"
       - condition: numeric_state
         entity_id: sensor.arbeitszimmer_lux
         below: 20
+      - condition: state
+        entity_id: input_boolean.office_motion
+        state: "on"
+      - condition: state
+        entity_id: switch.office
+        state: "off"
   action:
     - service: switch.turn_on
       entity_id: switch.office
@@ -167,25 +184,22 @@
   trigger:
     platform: state
     entity_id: sensor.arbeitszimmer_bewegung
-    to: "motion detected"
+    to: "on"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.office_motion
+        state: "on"
+      - condition: state
+        entity_id: switch.office
+        state: "off"
   action:
     - service: light.turn_on
       data:
         entity_id: light.office_led
         color_name: "blue"
         brightness: 255
-
-- id: "Bewegung Arbeitszimmer LED aus"
-  alias: "Bewegung Arbeitszimmer LED aus"
-  trigger:
-    platform: state
-    entity_id: sensor.arbeitszimmer_bewegung
-    to: "standby"
-    for:
-     minutes: 5
-  action:
-    - service: light.turn_off
-      entity_id: light.office_led
 
   ############################################################
   # Keine Bewegung im Arbeitszimmer mehr
@@ -195,10 +209,27 @@
   trigger:
     platform: state
     entity_id: sensor.arbeitszimmer_bewegung
-    to: "standby"
+    to: "off"
     for:
      minutes: 5
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: switch.office
+        state: "on"
   action:
     - service: switch.turn_off
       entity_id: switch.office
 
+- id: "Bewegung Arbeitszimmer LED aus"
+  alias: "Bewegung Arbeitszimmer LED aus"
+  trigger:
+    platform: state
+    entity_id: sensor.arbeitszimmer_bewegung
+    to: "off"
+    for:
+     minutes: 5
+  action:
+    - service: light.turn_off
+      entity_id: light.office_led

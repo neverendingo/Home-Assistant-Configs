@@ -33,17 +33,17 @@
         service: switch.turn_off
         data:
           entity_id: switch.office
-    office_leseecke:
-      friendly_name: Leseecke
-      value_template: "{{ is_state('switch.leseecke', 'on') }}"
-      turn_on:
-        service: switch.turn_on
-        data:
-          entity_id: switch.leseecke
-      turn_off:
-        service: switch.turn_off
-        data:
-          entity_id: switch.leseecke
+    #office_leseecke:
+      #friendly_name: Leseecke
+      #value_template: "{{ is_state('switch.leseecke', 'on') }}"
+      #turn_on:
+        #service: switch.turn_on
+        #data:
+          #entity_id: switch.leseecke
+      #turn_off:
+        #service: switch.turn_off
+        #data:
+          #entity_id: switch.leseecke
     schlafzimmer:
       friendly_name: Schlafzimmer
       value_template: "{{ is_state('switch.effects', 'on') }}"
@@ -56,27 +56,8 @@
         data:
           entity_id: switch.effects
 
-- platform: group
-  name: Wohnzimmer Lichter
-  entities:
-    - light.lampe_1
-    - light.lampe_2
-    - light.lampe_3
-    - light.livingroom_leselicht
-    - light.livingroom_buecher
-
-- platform: group
-  name: Arbeitszimmer Lichter
-  entities:
-    - light.office
-    - light.office_leseecke
-
-- platform: group
-  name: Schlafzimmer Lichter
-  entities:
-    - light.schlafzimmer
-
-- platform: mqtt_json
+- platform: mqtt
+  schema: json
   name: "Office LED"
   state_topic: "frika/sensornode1"
   command_topic: "frika/sensornode1/set"
@@ -86,3 +67,50 @@
   optimistic: false
   qos: 0
 
+- platform: flux_led
+  devices:
+      192.168.0.62:
+        name: arbeitszimmer_strip
+        mode: "rgb"
+      192.168.0.61:
+        name: wohnzimmer_strip
+        mode: "rgb"
+
+- platform: group
+  name: Wohnzimmer Lichter
+  entities:
+    - light.lampe_1
+    - light.lampe_2
+    - light.lampe_3
+    - light.onoff_plug_1_4
+    - light.livingroom_buecher
+    - light.wohnzimmer_strip
+    - light.color_light_1
+
+- platform: group
+  name: Arbeitszimmer Lichter
+  entities:
+    - light.onoff_plug_1_3
+    - light.arbeitszimmer_strip
+    - light.onoff_plug_1_2
+    - light.office_led
+
+- platform: group
+  name: Wohnzimmer RGB
+  entities:
+    - light.lampe_1
+    - light.lampe_2
+    - light.lampe_3
+    - light.wohnzimmer_strip
+    - light.color_light_1
+
+- platform: group
+  name: Arbeitszimmer RGB
+  entities:
+    - light.arbeitszimmer_strip
+    - light.office_led
+
+- platform: group
+  name: Schlafzimmer Lichter
+  entities:
+    - light.schlafzimmer

@@ -4,7 +4,7 @@
 - id: Wecker
   alias: 'Wecker'
   trigger:
-      platform: time
+      platform: time_pattern
       minutes: '/1'
       seconds: 0
   condition:
@@ -13,10 +13,15 @@
   action:
       - service: switch.turn_on
         entity_id: automation.livingroom_motion
-      - service: hue.hue_activate_scene
+      - service: script.turn_on
         data_template:
-          group_name: '{% if is_state("input_boolean.awake_light", "on") %}Wohnzimmer{% else %}none{% endif %}'
-          scene_name: '{% if is_state("input_boolean.awake_light", "on") %}Migräne{% else %}none{% endif %}'
+          entity_id: '{%- if is_state("input_boolean.awake_light", "on") -%}script.sonnenaufgang_hue{% endif %}'
+      - service: script.turn_on
+        data_template:
+          entity_id: '{%- if is_state("input_boolean.awake_light", "on") -%}script.sonnenaufgang_strip_arbeitszimmer{% endif %}'
+      - service: script.turn_on
+        data_template:
+          entity_id: '{%- if is_state("input_boolean.awake_light", "on") -%}script.sonnenaufgang_strip_wohnzimmer{% endif %}'
       - service: media_player.volume_set
         data_template:
           entity_id: '{% if is_state("input_boolean.awake_radio", "on") %}media_player.volumio{% else %}none{% endif %}'
@@ -24,7 +29,7 @@
       - service: media_player.play_media
         data_template:
           entity_id: >
-              media_player.livingroom
+              media_player.wohnzimmer
           media_content_id: >
             {% if is_state("input_select.timer_radio_station", "Delta Radio") %}
               http://streams.deltaradio.de/delta-live/mp3-192/mediaplayerdeltaradio
@@ -46,9 +51,3 @@
               none
             {% endif %}
           media_content_type: audio/mp3
-      - condition: or
-        conditions:
-          - condition: template
-            value_template: "{% if(states.input_boolean.coffee.state) == 'on' %} true {% else %} false {% endif %}"
-      - service: switch.turn_on
-        entity_id: switch.kaffeemaschine

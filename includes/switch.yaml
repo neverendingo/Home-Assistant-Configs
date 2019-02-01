@@ -4,15 +4,15 @@
     office:
       code_on: 14013452
       code_off: 14013443
-      signal_repetitions: 15
+      signal_repetitions: 20
     livingroom_1:
       code_on: 13988876
       code_off: 13988867
-      signal_repetitions: 15
+      signal_repetitions: 20
     livingroom_2:
       code_on: 13982732
       code_off: 13982723
-      signal_repetitions: 15
+      signal_repetitions: 20
 
 - platform: command_line
   switches:

@@ -130,3 +130,18 @@ scene.office_room:
   friendly_name: "Licht Arbeitszimmer"
 scene.radio_office:
   friendly_name: "Radio im Arbeitszimmer"
+
+script.lms_cmd_next_track:
+  icon: mdi:skip-next
+script.lms_cmd_pause_player:
+  icon: mdi:pause
+script.lms_cmd_start_player:
+  icon: mdi:play
+media_player.wohnzimmer:
+  name: Wohnzimmer
+  playerid: b8:27:eb:5b:4e:f7
+  sync_stat: false
+media_player.arbeitszimmer:
+  name: Arbeitszimmer
+  playerid: 7c:dd:90:66:2b:69
+  sync_stat: false

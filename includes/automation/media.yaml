@@ -33,59 +33,492 @@
 ############################################################
 # Radio aus
 ############################################################
-- alias: Radio aus
-  trigger:
-    - platform: state
-      entity_id: input_select.radio_station
-      to: "None"
-  action:
-    service: media_player.media_play_pause
-    data_template:
-      entity_id: >
-          {% if is_state("input_select.radio_player", "Wohnzimmer") %}
-            media_player.livingroom
-          {%-elif is_state("input_select.radio_player", "Arbeitszimmer") %}
-            media_player.office
-          {% else %}
-            none
-          {% endif %}
+  - alias: Radio aus
+    trigger:
+      - platform: state
+        entity_id: input_select.radio_station
+        to: "None"
+    action:
+      service: media_player.media_play_pause
+      data_template:
+        entity_id: >
+            {% if is_state("input_select.radio_player", "Wohnzimmer") %}
+              media_player.livingroom
+            {%-elif is_state("input_select.radio_player", "Arbeitszimmer") %}
+              media_player.office
+            {% else %}
+              none
+            {% endif %}
 
 ############################################################
 # Radio an
 ############################################################
-- alias: Radio an
-  trigger:
+  - alias: Radio an
+    trigger:
+      - platform: state
+        entity_id: input_select.radio_station
+    action:
+      - service: media_player.play_media
+        data_template:
+          entity_id: >
+            {% if is_state("input_select.radio_player", "Wohnzimmer") %}
+              media_player.livingroom
+            {%-elif is_state("input_select.radio_player", "Arbeitszimmer") %}
+              media_player.office
+            {% else %}
+              none
+            {% endif %}
+          media_content_id: >
+            {% if is_state("input_select.radio_station", "Delta Radio") %}
+              http://streams.deltaradio.de/delta-live/mp3-192/mediaplayerdeltaradio
+            {%-elif is_state("input_select.radio_station", "Delta Radio Grunge") %}
+              http://streams.deltaradio.de/delta-grunge/mp3-192/grunge
+            {%-elif is_state("input_select.radio_station", "Delta Radio Alternative") %}
+              http://streams.deltaradio.de/delta-alternative/mp3-192/mediaplayer
+            {%-elif is_state("input_select.radio_station", "Radio Paradise") %}
+              http://stream-uk1.radioparadise.com/aac-320
+            {%-elif is_state("input_select.radio_station", "Rockland Radio") %}
+              http://188.94.97.90/rockland.mp3
+            {%-elif is_state("input_select.radio_station", "ElDoRadio") %}
+              http://sender.eldoradio.de:8000/low
+            {%-elif is_state("input_select.radio_station", "Radio 91.2") %}
+              http://server2.lokalradioserver.de:8000/xstream.m3u
+            {%-elif is_state("input_select.radio_station", "Eins Live") %}
+              https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3
+            {% else %}
+              none
+            {% endif %}
+          media_content_type: audio/mp3
+
+
+### Last Modified Date:  Aug 2, 2018
+### The following automations are associated with the LMS controls applications and GUI
+### They are used to control squeezebox players
+
+# LMS GUI Volume control
+  - alias: "LMS GUI Volume Control"
+    initial_state: true
+    trigger:
     - platform: state
-      entity_id: input_select.radio_station
-  action:
-    - service: media_player.play_media
+      entity_id: input_number.lms_volume
+    action:
+    - service:  media_player.squeezebox_call_method
       data_template:
-        entity_id: >
-          {% if is_state("input_select.radio_player", "Wohnzimmer") %}
-            media_player.livingroom
-          {%-elif is_state("input_select.radio_player", "Arbeitszimmer") %}
-            media_player.office
-          {% else %}
-            none
-          {% endif %}
-        media_content_id: >
-          {% if is_state("input_select.radio_station", "Delta Radio") %}
-            http://streams.deltaradio.de/delta-live/mp3-192/mediaplayerdeltaradio
-          {%-elif is_state("input_select.radio_station", "Delta Radio Grunge") %}
-            http://streams.deltaradio.de/delta-grunge/mp3-192/grunge
-          {%-elif is_state("input_select.radio_station", "Delta Radio Alternative") %}
-            http://streams.deltaradio.de/delta-alternative/mp3-192/mediaplayer
-          {%-elif is_state("input_select.radio_station", "Radio Paradise") %}
-            http://stream-uk1.radioparadise.com/aac-320
-          {%-elif is_state("input_select.radio_station", "Rockland Radio") %}
-            http://188.94.97.90/rockland.mp3
-          {%-elif is_state("input_select.radio_station", "ElDoRadio") %}
-            http://sender.eldoradio.de:8000/low
-          {%-elif is_state("input_select.radio_station", "Radio 91.2") %}
-            http://server2.lokalradioserver.de:8000/xstream.m3u
-          {%-elif is_state("input_select.radio_station", "Eins Live") %}
-            https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3
-          {% else %}
-            none
-          {% endif %}
-        media_content_type: audio/mp3
+        entity_id: "media_player.{{states.input_select.lms_player.state}}"
+        command: "mixer"
+        parameters: ["volume", "{{states.input_number.lms_volume.state}}"]
+
+
+# LMS GUI Sleep Time control
+  - alias: "LMS GUI Sleep Timer Control"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_number.lms_sleep_time
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_player.state}}"
+        command: "sleep"
+        parameters: ["{{states.input_number.lms_sleep_time.state|int * 60}}"]
+
+
+# LMS GUI Shuffle On / Off
+  - alias: "LMS GUI Shuffle Control"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_shuffle
+    action:
+    - service:  media_player.shuffle_set
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_player.state}}"
+        shuffle: >
+            {% if (states.input_boolean.lms_shuffle.state == "on") %} true
+            {% else %} false {% endif %}
+
+
+# LMS GUI Repeat On / Off
+  - alias: "LMS GUI Repeat Control"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_repeat
+    action:
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.lms_p1
+        value:  >
+            {% if (states.input_boolean.lms_repeat.state == "on") %} 2
+            {% else %} 0 {% endif %}
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_player.state}}"
+        command: "playlist"
+        parameters: ["repeat", "{{states.input_text.lms_p1.state}}"]
+
+
+# LMS GUI Command for play playlist
+  - alias: "LMS GUI Play Playlist Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "play playlist"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_play_playlist
+            {% else %}
+                script.lms_cmd_play_playlist_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+# LMS GUI Command for add playlist
+  - alias: "LMS GUI Add Playlist Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "add playlist"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_add_playlist
+            {% else %}
+                script.lms_cmd_add_playlist_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+
+# LMS GUI Command for play artist
+  - alias: "LMS GUI Play Artist Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "play artist"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_play_artist
+            {% else %}
+                script.lms_cmd_play_artist_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+
+# LMS GUI Command for add artist
+  - alias: "LMS GUI Add Artist Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "add artist"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_add_artist
+            {% else %}
+                script.lms_cmd_add_artist_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+
+# LMS GUI Command for play album
+  - alias: "LMS GUI Play Album Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "play album"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_play_album
+            {% else %}
+                script.lms_cmd_play_album_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+
+# LMS GUI Command for add album
+  - alias: "LMS GUI Add Album Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "add album"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_add_album
+            {% else %}
+                script.lms_cmd_add_album_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+
+# LMS GUI Command for play song
+  - alias: "LMS GUI Play Song Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "play song"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_play_song
+            {% else %}
+                script.lms_cmd_play_song_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+
+# LMS GUI Command for add song
+  - alias: "LMS GUI Add Song Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "add song"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if (states.input_select.lms_source.state == "lms") %}
+                script.lms_cmd_add_song
+            {% else %}
+                script.lms_cmd_add_song_spot
+            {% endif %}
+    - delay: 00:00:02
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.lms_command
+        option: "__________________"
+
+
+# LMS GUI Command for next track
+  - alias: "LMS GUI Next Track Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "next track"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: script.lms_cmd_next_track
+
+# LMS GUI Command for pause player
+  - alias: "LMS GUI Pause Player Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "player pause"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: script.lms_cmd_pause_player
+
+# LMS GUI Command for re-start of player
+  - alias: "LMS GUI Player Re-start Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_command
+      to: "player restart"
+    action:
+    - service: script.turn_on
+      data_template:
+        entity_id: script.lms_cmd_start_player
+
+# LMS GUI Master Sync Controls
+  - alias: "LMS GUI Add Song Command"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_select.lms_sync_master
+    action:
+    - service: input_boolean.turn_off
+      data_template:
+        entity_id: group.lms_sync_players
+
+# LMS GUI Player_1 Sync Controls - on
+  - alias: "LMS GUI Player 1 Sync Controls - ON"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player1_sync
+      to: "on"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_sync_master.state}}"
+        command: "sync"
+        parameters: ['{{ state_attr("media_player." + states.input_boolean.lms_player1_sync.name, "playerid") }}']
+# LMS GUI Player_1 Sync Controls - off
+  - alias: "LMS GUI Player 1 Sync Controls - OFF"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player1_sync
+      to: "off"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: media_player.{{states.input_boolean.lms_player1_sync.name}}
+        command: "sync"
+        parameters: ["-"]
+
+# LMS GUI Player_2 Sync Controls - on
+  - alias: "LMS GUI Player 2 Sync Controls - ON"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player2_sync
+      to: "on"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_sync_master.state}}"
+        command: "sync"
+        parameters: ['{{ state_attr("media_player." + states.input_boolean.lms_player2_sync.name, "playerid") }}']
+# LMS GUI Player_2 Sync Controls - off
+  - alias: "LMS GUI Player 2 Sync Controls - OFF"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player2_sync
+      to: "off"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: media_player.{{states.input_boolean.lms_player2_sync.name}}
+        command: "sync"
+        parameters: ["-"]
+
+# LMS GUI Player_3 Sync Controls - on
+  - alias: "LMS GUI Player 3 Sync Controls - ON"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player3_sync
+      to: "on"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_sync_master.state}}"
+        command: "sync"
+        parameters: ['{{ state_attr("media_player." + states.input_boolean.lms_player3_sync.name, "playerid") }}']
+# LMS GUI Player_3 Sync Controls - off
+  - alias: "LMS GUI Player 3 Sync Controls - OFF"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player3_sync
+      to: "off"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: media_player.{{states.input_boolean.lms_player3_sync.name}}
+        command: "sync"
+        parameters: ["-"]
+
+# LMS GUI Player_4 Sync Controls - on
+  - alias: "LMS GUI Player 4 Sync Controls - ON"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player4_sync
+      to: "on"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_sync_master.state}}"
+        command: "sync"
+        parameters: ['{{ state_attr("media_player." + states.input_boolean.lms_player4_sync.name, "playerid") }}']
+# LMS GUI Player_4 Sync Controls - off
+  - alias: "LMS GUI Player 4 Sync Controls - OFF"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player4_sync
+      to: "off"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: media_player.{{states.input_boolean.lms_player4_sync.name}}
+        command: "sync"
+        parameters: ["-"]
+
+# LMS GUI Player_5 Sync Controls - on
+  - alias: "LMS GUI Player 5 Sync Controls - ON"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player5_sync
+      to: "on"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: "media_player.{{states.input_select.lms_sync_master.state}}"
+        command: "sync"
+        parameters: ['{{ state_attr("media_player." + states.input_boolean.lms_player5_sync.name, "playerid") }}']
+# LMS GUI Player_5 Sync Controls - off
+  - alias: "LMS GUI Player 5 Sync Controls - OFF"
+    initial_state: true
+    trigger:
+    - platform: state
+      entity_id: input_boolean.lms_player5_sync
+      to: "off"
+    action:
+    - service:  media_player.squeezebox_call_method
+      data_template:
+        entity_id: media_player.{{states.input_boolean.lms_player5_sync.name}}
+        command: "sync"
+        parameters: ["-"]

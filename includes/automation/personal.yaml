@@ -5,7 +5,7 @@
   alias: "Smartphonebatterie Ingo"
   trigger:
     platform: numeric_state
-    entity_id: device_tracker.ingo_motog5
+    entity_id: device_tracker.ingo_motog6
     value_template: '{{ state.attributes.battery }}'
     below: 30
   action:

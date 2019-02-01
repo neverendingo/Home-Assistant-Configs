@@ -58,3 +58,17 @@ workday:
   name: Arbeitstag
   icon: mdi:calendar
 
+lms_shuffle:
+    name: Zufall
+    icon: mdi:shuffle-variant
+lms_repeat:
+    name: Wiederholen
+    icon: mdi:repeat
+## Upto 5 players can be defined for sync
+## name: must match the media_player."player name"
+lms_player1_sync:
+    name: wohnzimmer
+    icon: mdi:cast
+lms_player2_sync:
+    name: arbeitszimmer
+    icon: mdi:cast

@@ -10,29 +10,18 @@
       entity_id: group.licht
     - service: light.turn_off
       entity_id: group.all_lights
-
-############################################################
-# Licht an, wenn jemand nach Hause kommt, nach Sonnenu.
-############################################################
-- alias: "Nachhausekommen"
-  trigger:
-    platform: state
-    entity_id: group.familie
-    to: 'home'
-  condition:
-    condition: sun
-    after: sunset
-  action:
-    service: light.turn_on
-    entity_id: group.wohnzimmer_hue
+    - service: telegram_bot.send_message
+      data_template:
+        target: !secret chatid_1
+        message: "Die Sonne geht auf, Licht aus."
 
 ############################################################
 # Random Color loop
 ############################################################
 - alias: 'Partymodus Wohnzimmer'
   trigger:
-    platform: time
-    seconds: 30
+    platform: time_pattern
+    seconds: "/30"
   condition:
     condition: state
     entity_id: input_boolean.livingroom_partymode

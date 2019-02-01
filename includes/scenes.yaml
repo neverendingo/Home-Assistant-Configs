@@ -1,12 +1,65 @@
+############################################################
+# Gemütlich
+############################################################
+- name: gemutlich_arbeitszimmer
+  entities:
+    light.onoff_plug_1_2: on
+    light.arbeitszimmer_strip:
+      state: on
+      rgb_color: [255,190,0]
+    light.onoff_plug_1_2: off
+
+- name: gemutlich_wohnzimmer
+  entities:
+    light.wohnzimmer_strip:
+      state: on
+      rgb_color: [255,190,0]
+    light.livingroom_buecher: on
+    light.onoff_plug_1_4: off
+    light.lampe_1:
+      state: on
+      brightness: 136
+      rgb_color: [255,126,72]
+    light.lampe_2:
+      state: on
+      brightness: 136
+      rgb_color: [255,219,89]
+    light.lampe_3:
+      state: on
+      brightness: 136
+      rgb_color: [255,126,72]
+
+############################################################
+# Lesen
+############################################################
+- name: lesen_arbeitszimmer
+  entities:
+    light.onoff_plug_1_2: on
+    light.arbeitszimmer_strip: off
+    light.onoff_plug_1_2: on
+
+- name: lesen_wohnzimmer
+  entities:
+    light.wohnzimmer_strip: off
+    light.livingroom_buecher: on
+    light.onoff_plug_1_4: on
+    light.lampe_1:
+      state: on
+      brightness: 254
+      rgb_color: [255,210,129]
+    light.lampe_2:
+      state: on
+      brightness: 254
+      rgb_color: [255,210,129]
+    light.lampe_3:
+      state: on
+      brightness: 254
+      rgb_color: [255,210,129]
+
 - name: movies
   entities:
     switch.livingroom_1: on
     switch.livingroom_2: off
-
-- name: office room
-  entities:
-    switch.office: on
-    switch.leseecke: on
 
 - name: all on
   entities:
@@ -56,16 +109,3 @@
   entities:
     script.sleeping_steffi: on
 
-- name: Lesen Wohnzimmer
-  entities:
-    group.all_lights:
-      state: on
-      transition: 2
-      profile: reading
-    switch.livingroom_2: on
-    switch.livingroom_1: off
-
-
-- name: Lesen Arbeitszimmer
-  entities:
-    switch.leseecke: on

@@ -29,6 +29,10 @@
     - download
     - upload
 
+- platform: time_date
+  display_options:
+      - 'time'
+
 - platform: template
   sensors:
     alarm_clock_hour:
@@ -48,7 +52,7 @@
         {%- if states.calendar.feiertage_in_deutschland %}{{states.calendar.feiertage_in_deutschland.attributes.message}} ({{strptime(states.calendar.feiertage_in_deutschland.attributes.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d. %B") }}) {%- endif %}
 
     ingo_battery:
-      value_template: '{{states.device_tracker.ingo_motog5.attributes.battery}}'
+      value_template: '{{states.device_tracker.ingo_motog6.attributes.battery}}'
       unit_of_measurement: '%'
       friendly_name: 'Ingo Moto G5 Akku'
     anwesend:
@@ -67,6 +71,40 @@
         ({{ strptime(states.calendar.contacts.attributes.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d. %B") }})
       friendly_name: Geburtstage
       unit_of_measurement: ''
+
+    heat_bedroom:
+      value_template: "{{ states.climate.heating_bedroom.attributes.current_temperature }}"
+      unit_of_measurement: "°C"
+    heat_office:
+      value_template: "{{ states.climate.heating_office.attributes.current_temperature }}"
+      unit_of_measurement: "°C"
+    heat_livingroom:
+      value_template: "{{ states.climate.heating_livingroom.attributes.current_temperature }}"
+      unit_of_measurement: "°C"
+    heat_hall:
+      value_template: "{{ states.climate.heating_hall.attributes.current_temperature }}"
+      unit_of_measurement: "°C"
+    heat_kitchen:
+      value_template: "{{ states.climate.heating_kitchen.attributes.current_temperature }}"
+      unit_of_measurement: "°C"
+    heat_outside:
+      value_template: "{{ states.weather.openweathermap.attributes.temperature }}"
+      unit_of_measurement: "°C"
+
+    current_heating_mode:
+        friendly_name: "Heizungsmodus"
+        value_template: >-
+            {% if is_state('binary_sensor.workday_sensor', 'on') and ( states.sensor.time.state >= states.input_select.weekday_morn_on.state ) and (  states.sensor.time.state <= states.input_select.weekday_morn_off.state) %} Wochentag Morgen
+            {% elif is_state('binary_sensor.workday_sensor', 'on') and ( states.sensor.time.state >= states.input_select.weekday_morn_off.state ) and (  states.sensor.time.state <= states.input_select.weekday_eve_on.state) %} Wochentag tagsüber
+            {% elif is_state('binary_sensor.workday_sensor', 'on') and ( states.sensor.time.state >= states.input_select.weekday_eve_on.state ) and (  states.sensor.time.state <= states.input_select.weekday_eve_off.state) %} Wochentag Abend
+            {% elif is_state('binary_sensor.workday_sensor', 'on') and ( states.sensor.time.state >= states.input_select.weekday_eve_off.state ) and (  states.sensor.time.state <= '23:59') %} Wochentag Nachts
+            {% elif is_state('binary_sensor.workday_sensor', 'on') and ( states.sensor.time.state >= '00:00') and (  states.sensor.time.state <= states.sensor.time.state <= states.input_select.weekend_morn_on.state) %} Wochentag Nachts
+            {% elif is_state('binary_sensor.workday_sensor', 'off') and ( states.sensor.time.state >= states.input_select.weekend_morn_on.state ) and (  states.sensor.time.state <= states.input_select.weekend_morn_off.state) %} Wochenende Morgen
+            {% elif is_state('binary_sensor.workday_sensor', 'off') and ( states.sensor.time.state >= states.input_select.weekend_morn_off.state ) and (  states.sensor.time.state <= states.input_select.weekend_eve_on.state) %} Wochenende tagsüber
+            {% elif is_state('binary_sensor.workday_sensor', 'off') and ( states.sensor.time.state >= states.input_select.weekend_eve_on.state ) and (  states.sensor.time.state <= states.input_select.weekend_eve_off.state) %} Wochenende Abend
+            {% elif is_state('binary_sensor.workday_sensor', 'off') and ( states.sensor.time.state >= states.input_select.weekend_eve_off.state ) and (  states.sensor.time.state <= '23:59') %} Wochenende Nachts
+            {% elif is_state('binary_sensor.workday_sensor', 'off') and ( states.sensor.time.state >= '00:00') and (  states.sensor.time.state <= states.sensor.time.state <= states.input_select.weekend_morn_on.state) %} Wochenende Nachts
+            {% endif %}
 
 - platform: systemmonitor
   resources:

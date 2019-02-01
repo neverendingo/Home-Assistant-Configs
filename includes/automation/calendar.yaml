@@ -104,7 +104,7 @@
 - id: "Koch benachrichtigen"
   alias: "Koch benachrichtigen"
   trigger:
-      platform: time
+      platform: time_pattern
       hours: 15
       minutes: 0
       seconds: 0

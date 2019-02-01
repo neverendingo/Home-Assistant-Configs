@@ -7,3 +7,46 @@ alarm_clock_minute:
   min: 0
   max: 55
   step: 5
+
+lms_volume:
+    name: Lautstärke
+    min: 0
+    max: 100
+    step: 1
+    icon: mdi:volume-high
+lms_sleep_time:
+    name: Wecker
+    min: 0
+    max: 60
+    step: 1
+    icon: mdi:timer
+
+morning_temp:
+    name: Heizung morgens
+    min: 13
+    max: 24
+    step: 1
+
+evening_temp:
+    name: Heizung abends
+    min: 13
+    max: 24
+    step: 1
+
+daytime_temp:
+    name: Temperatur tagsüber
+    min: 12
+    max: 24
+    step: 1
+
+nighttime_temp:
+    name: Temperatur nachts
+    min: 12
+    max: 24
+    step: 1
+
+holiday_temp:
+    name: Temperatur Urlaub
+    min: 12
+    max: 14
+    step: 1

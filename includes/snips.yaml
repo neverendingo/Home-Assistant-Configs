@@ -1,123 +1,100 @@
+############################################################
+# Lichtsteuerung
+############################################################
+
 LampenAnSchalten:
   speech:
     type: plain
-    text: 'Ok, Licht wird angemacht'
+    text: 'Ok, Licht wird im {% if deviceLocation is defined %}{{ deviceLocation | replace(" ","") }}{% else %}{{ site_id }}{% endif %} angemacht'
   action:
     - service: light.turn_on
       data_template:
-        entity_id: light.{{ deviceLocation | replace(" ","") }}_lichter
+        entity_id: light.{%- if deviceLocation is defined -%}{{ deviceLocation | replace(" ","") }}{% else %}{{ site_id }}{%- endif -%}_lichter
 
 LampenAusSchalten:
   action:
     - service: light.turn_off
       data_template:
-        entity_id: light.{{ deviceLocation | replace(" ","") }}_lichter
+        entity_id: light.{%- if deviceLocation is defined -%}{{ deviceLocation | replace(" ","") }}{% else %}{{ site_id }}{%- endif -%}_lichter
 
 LichtDimmen:
   action:
     service: light.turn_on
     data_template:
-      entity_id: light.{{ deviceLocation | replace(" ","") }}
-      brightness_pct: "{{ value }}"
+      entity_id: light.{%- if deviceLocation is defined -%}{{ deviceLocation | replace(" ","") }}{% else %}{{ site_id }}{%- endif -%}_rgb
+      brightness: >
+        {%- if deviceLocation is defined -%}
+          {%- if deviceLocation == "wohnzimmer" -%}
+            {%- set current = states.light.wohnzimmer_lichter.attributes.brightness|default(0)|int -%}
+          {%- elif deviceLocation == "arbeitszimmer" -%}
+            {%- set current = states.light.arbeitszimmer_lichter.attributes.brightness|default(0)|int -%}
+          {%- endif -%}
+        {%- else -%}
+          {%- if site_id == "wohnzimmer" -%}
+            {%- set current = states.light.wohnzimmer_lichter.attributes.brightness|default(0)|int -%}
+          {%- elif site_id == "arbeitszimmer" -%}
+            {%- set current = states.light.arbeitszimmer_lichter.attributes.brightness|default(0)|int -%}
+          {%- endif -%}
+        {%- endif -%}
+        {%- if value is defined -%}{{ value|int }}{% elif action == "lower" %}{{ current - 20 }}{%- elif action == "higher" -%}{{ current + 20 }}{%- endif -%}
 
 SzenenSchalten:
   action:
     - service:
-        hue.hue_activate_scene
+        scene.turn_on
       data_template:
-        group_name: "Wohnzimmer"
-        scene_name: '{{ Szene }}'
+        entity_id: scene.{%- if Szene == "Gemütlich" -%}gemutlich{%- elif Szene == "lesen" -%}lesen{%- endif -%}_{%- if Zimmer is defined -%}{% filter lower %}{{ Zimmer }}{% endfilter %}{% else %}{% filter lower %}{{ site_id }}{% endfilter %}{%- endif -%}
 
+FarbeWechseln:
+  action:
+    - service: light.turn_on
+      data_template:
+        entity_id: light.{%- if deviceLocation is defined -%}{{ deviceLocation | replace(" ","") }}{% else %}{{ site_id }}{%- endif -%}_rgb
+        color_name: "{{ color }}"
 
+############################################################
+# Geräte steuern
+############################################################
 ActivateObject:
   action:
     - service_template: >
-        {%- if device == "kaffeemaschine" -%}
-        switch.turn_on
-        {%- elif device == "spülmaschine" -%}
-        switch.turn_on
-        {%- elif device == "regal" -%}
-        switch.turn_on
-        {%- elif device == "Licht" -%}
-        switch.turn_on
-        {%- elif device == "Musik" -%}
+        {%- if device == "Musik" -%}
         media_player.media_play_pause
+        {%- elif device == "Heizung" -%}
+        script.turn_on
+        {%- elif device == "Fernseher" -%}
+        shell_command.fernseher_an
         {%- endif -%}
 
       data_template:
         entity_id: >
-          {%- if device == "kaffeemaschine" -%}
-          switch.kaffeemaschine
-          {%- elif device == "spülmaschine" -%}
-          switch.kaffeemaschine
-          {%- elif device == "regal" -%}
-          switch.livingroom_1
-          {%- elif device == "Musik" -%}
-          media_player.livingroom
-          {%- elif device == "Licht" -%}
-          switch.{%- if deviceLocation == "Wohnzimmer" -%}livingroom_2{%- elif deviceLocation == "Arbeitszimmer" -%}leseecke{%- endif -%}
+          {%- if device == "Musik" -%}
+          media_player.{%- if deviceLocation is defined -%}{% filter lower %}{{ deviceLocation }}{% endfilter %}{% else %}{% filter lower %}{{ site_id }}{% endfilter %}{%- endif -%}
+          {%- elif device == "Heizung" -%}
+          script.activate_{%- if deviceLocation == "Wohnzimmer" -%}wohnzimmer{%- elif deviceLocation == "Arbeitszimmer" -%}arbeitszimmer{%- elif deviceLocation == "Flur" -%}flur{%- elif deviceLocation == "Küche" -%}kuche{%- elif deviceLocation == "Schlafzimmer" -%}schlafzimmer{%- endif -%}
           {%- endif -%}
 
 DeactivateObject:
   action:
     - service_template: >
-        {%- if device == "kaffeemaschine" -%}
-        switch.turn_off
-        {%- elif device == "spülmaschine" -%}
-        switch.turn_off
-        {%- elif device == "regal" -%}
-        switch.turn_off
-        {%- elif device == "Licht" -%}
-        switch.turn_off
-        {%- elif device == "Musik" -%}
+        {%- if device == "Musik" -%}
         media_player.media_play_pause
+        {%- elif device == "Heizung" -%}
+        script.turn_on
+        {%- elif device == "Fernseher" -%}
+        shell_command.fernseher_aus
         {%- endif -%}
       data_template:
         entity_id: >
-          {%- if device == "kaffeemaschine" -%}
-          switch.kaffeemaschine
-          {%- elif device == "spülmaschine" -%}
-          switch.kaffeemaschine
-          {%- elif device == "hauptlicht" -%}
-          switch.livingroom_2
-          {%- elif device == "regal" -%}
-          switch.livingroom_1
-          {%- elif device == "Musik" -%}
-          media_player.livingroom
-          {%- elif device == "Licht" -%}
-          switch.{%- if deviceLocation == "Wohnzimmer" -%}livingroom_2{%- elif deviceLocation == "Arbeitszimmer" -%}leseecke{%- endif -%}
+          {%- if device == "Musik" -%}
+          media_player.{%- if deviceLocation is defined -%}{% filter lower %}{{ deviceLocation }}{% endfilter %}{% else %}{% filter lower %}{{ site_id }}{% endfilter %}{%- endif -%}
+          {%- elif device == "Heizung" -%}
+          script.deactivate_{%- if deviceLocation == "Wohnzimmer" -%}wohnzimmer{%- elif deviceLocation == "Arbeitszimmer" -%}arbeitszimmer{%- elif deviceLocation == "Flur" -%}flur{%- elif deviceLocation == "Küche" -%}kuche{%- elif deviceLocation == "Schlafzimmer" -%}schlafzimmer{%- endif -%}
           {%- endif -%}
 
-tellJoke:
-  action:
-    - service: snips.say
-      data_template:
-        text: >
-          {% set witze = [
-            'Was sagt ein Hai, nachdem es einen Surfer gefressen hat? Nett serviert, so mit Frühstücksbrettchen',
-            'Geht eine schwangere Frau in eine Bäckerei und sagt: Ich krieg ein Brot. Darauf der Bäcker: Sachen gibts!',
-            "Geht eine dicke Frau in eine Bäckerei und sagt: Ich möchte gerne Rumkugeln! Darauf der Bäcker: Aber nicht in meinem Laden!",
-            "Ein Mann und eine Frau sitzen zusammen im Restaurant. Plötzlich bekleckert sich die Frau und sagt: Jetzt sehe ich ja aus wie ein Schwein! Darauf der Mann: Und bekleckert bist du auch noch!!!",
-            "Heute habe ich eine Pizza mit in den Bus genommen. Der Busfahrer meinte, dass ein Bus kein Restaurant sei. Ich habe ihm dann gesagt, dass das genau der Grund ist, warum ich mein eigenes Essen mitgenommen habe.",
-            "Der Ehemann zu seiner Frau: Wir haben im Lotto gewonnen. Ich habe schon große Pläne mit dem Gewinn. Was sollen wir uns alles kaufen? Die Frau: Um ganz ehrlich zu sein Peter, ich würde gerne meine Hälfte nehmen und dich verlassen. Der Mann: Oh, ok! Wir haben 30 Euro gewonnen. Hier hast du deine 15 Euro!",
-            "Kurze Erinnerung: Auf einer Beerdigung solltest du einen Blumenstrauß niemals hinter dich werfen, nur um zu sehen, wer sie fängt.",
-            "Mit diesem Minirock werde ich dich kein Stück auf die Straße lassen, mein Kind! Kind: Ach Mama, warum denn nicht?! Kuck mal, ich habe doch so hübsche Beine. Mutter: Dein Sack hängt unten raus.",
-            "Eine Frau wurde vor einem Gericht zu einer Geldstrafe verurteilt, weil sie ihr eigenes Popcorn, Cola und Süßigkeiten mitgebracht hat. Insgesamt kam sie aber trotzdem günstiger davon.",
-            "Ich hatte mich heute mit meiner Schwiegermutter für einen schönen Tag im Stadtpark verabredet. - An dieser Stelle möchte ich mich auch ganz herzlich bei der Bundeswehr für die Scharfschützenausbildung bedanken.",
-            "Ich mag es überhaupt nicht, wenn die Bettler auf der Straße ihren Becher mit den Münzen nach mir schütteln. Ich finde das schlimm, wenn die mir auch noch unter die Nase reiben, dass sie mehr Geld haben als ich.",
-            "Jedes Stückchen Schokolade, das man isst, soll das Leben um 2 Minuten verkürzen. Ich habe das mal ausgerechnet. Bin fünfzehnhundert dreiundvierzig gestorben. "
-          ] %}
-          {{witze|random}}
-
-searchWeatherForecast:
-  speech:
-    type: plain
-    text: >
-      Die Temperatur beträgt aktuell
-      {{ states('sensor.owm_temperature') | round(0) }}
-      Grad und es ist {{ states('sensor.owm_condition') }} mit einer Luftfeuchtigkeit von {{ states('sensor.owm_humidity') | round(0) }} Prozent.
-      Die Vorhersage lautet: {{ states('sensor.owm_forecast') }}
-
+############################################################
+# Wecker
+############################################################
 setAlarm:
   speech:
     type: plain
@@ -145,36 +122,40 @@ getAddition:
     - service: snips.say
       data_template:
         text: >
-          Das Ergebnis von {{ firstTerm }} plus {{ secondTerm }} ist {{ firstTerm + secondTerm }}
+          {{ firstTerm }} plus {{ secondTerm }} ist {{ firstTerm + secondTerm }}
+        site_id: "{{ site_id }}"
 
-
-getSubtraction:
+getSubtraktion:
   action:
     - service: snips.say
       data_template:
         text: >
-          Das Ergebnis von {{ firstTerm }} minus {{ secondTerm }} ist {{ firstTerm - secondTerm }}
+          {{ firstTerm }} minus {{ secondTerm }} ist {{ firstTerm - secondTerm }}
+        site_id: "{{ site_id }}"
 
-getMultiplication:
+getMultiplikation:
   action:
     - service: snips.say
       data_template:
         text: >
-          Das Ergebnis von {{ firstTerm }} mal {{ secondTerm }} ist {{ firstTerm * secondTerm }}
+          {{ firstTerm }} mal {{ secondTerm }} ist {{ firstTerm * secondTerm }}
+        site_id: "{{ site_id }}"
 
 getDivision:
   action:
     - service: snips.say
       data_template:
         text: >
-          Das Ergebnis von {{ firstTerm }} durch {{ secondTerm }} ist {{ firstTerm / secondTerm }}
+          {{ firstTerm }} durch {{ secondTerm }} ist {{ firstTerm / secondTerm }}
+        site_id: "{{ site_id }}"
 
 
 StartRadio:
   action:
     - service: media_player.play_media
       data_template:
-        entity_id: media_player.livingroom
+        entity_id: >
+          media_player.{%- if deviceLocation is defined -%}{% filter lower %}{{ deviceLocation }}{% endfilter %}{% else %}{% filter lower %}{{ site_id }}{% endfilter %}{%- endif -%}
         media_content_id: >
           {%- if station == "einslive" -%}
             https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3

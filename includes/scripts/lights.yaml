@@ -9,3 +9,378 @@ essen_kommen:
         flash: "long"
     - service: input_boolean.turn_off
       entity_id: input_boolean.essen_kommen
+
+activate_hue_scene:
+  alias: Szene schalten
+  sequence:
+    - service: hue.hue_activate_scene
+      data_template:
+        group_name: "Wohnzimmer"
+        scene_name: "{{ scene_name }}"
+
+sonnenaufgang_hue:
+  alias: Sonnenaufgang Hue
+  sequence:
+    - service: light.turn_on
+      entity_id: light.color_light_1
+      data:
+        rgb_color: [255,71,0]
+        brightness: 1
+    - delay:
+        minutes: 3
+    - service: light.turn_on
+      entity_id: light.lampe_2
+      data:
+        rgb_color: [255,71,0]
+        brightness: 1
+    - service: light.turn_on
+      entity_id: light.lampe_3
+      data:
+        rgb_color: [255,71,0]
+        brightness: 1
+
+    - service: light.turn_on
+      entity_id: light.color_light_1
+      data:
+        rgb_color: [ 255,130,30]
+        brightness: 50
+        transition: 120
+    - delay:
+        minutes: 3
+    - service: light.turn_on
+      entity_id: light.lampe_1
+      data:
+        rgb_color: [ 255,130,30]
+        brightness: 1
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_2
+      data:
+        rgb_color: [ 255,130,30]
+        brightness: 50
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_3
+      data:
+        rgb_color: [ 255,130,30]
+        brightness: 50
+        transition: 120
+
+    - service: light.turn_on
+      entity_id: light.color_light_1
+      data:
+        rgb_color: [255,171,43]
+        brightness: 100
+        transition: 120
+    - delay:
+        minutes: 3
+    - service: light.turn_on
+      entity_id: light.lampe_1
+      data:
+        rgb_color: [255,171,43]
+        brightness: 20
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_2
+      data:
+        rgb_color: [255,171,43]
+        brightness: 100
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_3
+      data:
+        rgb_color: [255,171,43]
+        brightness: 100
+        transition: 120
+
+    - service: light.turn_on
+      entity_id: light.color_light_1
+      data:
+        rgb_color: [255,210,68]
+        brightness: 150
+        transition: 120
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.lampe_1
+      data:
+        rgb_color: [255,210,68]
+        brightness: 50
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_2
+      data:
+        rgb_color: [255,210,68]
+        brightness: 120
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_3
+      data:
+        rgb_color: [255,210,68]
+        brightness: 120
+        transition: 120
+
+    - service: light.turn_on
+      entity_id: light.color_light_1
+      data:
+        rgb_color: [255,233,157]
+        brightness: 200
+        transition: 120
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.lampe_1
+      data:
+        rgb_color: [255,233,157]
+        brightness: 120
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_2
+      data:
+        rgb_color: [255,233,157]
+        brightness: 200
+        transition: 120
+    - service: light.turn_on
+      entity_id: light.lampe_3
+      data:
+        rgb_color: [255,233,157]
+        brightness: 200
+        transition: 120
+
+sonnenaufgang_strip_arbeitszimmer:
+  sequence:
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.701,0.299]
+        brightness: 5
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.701,0.299]
+        brightness: 5
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.701,0.299]
+        brightness: 15
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.678,0.318]
+        brightness: 25
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.678,0.318]
+        brightness: 35
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.678,0.318]
+        brightness: 45
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 55
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 65
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 75
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 85
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 95
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 105
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 115
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 125
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 135
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 145
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.arbeitszimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 155
+
+sonnenaufgang_strip_wohnzimmer:
+  sequence:
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.701,0.299]
+        brightness: 5
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.701,0.299]
+        brightness: 5
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.701,0.299]
+        brightness: 15
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.678,0.318]
+        brightness: 25
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.678,0.318]
+        brightness: 35
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.678,0.318]
+        brightness: 45
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 55
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 65
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 75
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 85
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.585,0.386]
+        brightness: 95
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 105
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 115
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 125
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 135
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 145
+    - delay:
+        minutes: 2
+    - service: light.turn_on
+      entity_id: light.wohnzimmer_strip
+      data:
+        xy_color: [0.496,0.39]
+        brightness: 155
+
+

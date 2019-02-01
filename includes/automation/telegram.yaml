@@ -2,7 +2,7 @@
 # Telegram Commands
 ############################################################
 
-- alias: "Telegram - Licht im Wohnzimmer an"
+- alias: "Telegram - Licht im Wohnzimmer"
   trigger:
     platform: event
     event_type: telegram_command
@@ -18,7 +18,7 @@
 
         "
 
-- alias: "Telegram - Licht im Arbeitszimmer an"
+- alias: "Telegram - Licht im Arbeitszimmer"
   trigger:
     platform: event
     event_type: telegram_command
@@ -44,7 +44,8 @@
     service: telegram_bot.send_message
     data_template:
       target: !secret chatid_1
-      message: "System ist online!
+      message: "
+        System ist online!
 
         Die Geräte sind hier:
 
