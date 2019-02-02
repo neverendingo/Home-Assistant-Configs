@@ -173,11 +173,11 @@
         entity_id: input_boolean.office_motion
         state: "on"
       - condition: state
-        entity_id: switch.office
+        entity_id: light.onoff_plug_1_3
         state: "off"
   action:
-    - service: switch.turn_on
-      entity_id: switch.office
+    - service: light.turn_on
+      entity_id: light.onoff_plug_1_3
 
 - id: "Bewegung Arbeitszimmer LED"
   alias: "Bewegung Arbeitszimmer LED"
@@ -216,11 +216,11 @@
     condition: and
     conditions:
       - condition: state
-        entity_id: switch.office
+        entity_id: light.onoff_plug_1_3
         state: "on"
   action:
-    - service: switch.turn_off
-      entity_id: switch.office
+    - service: light.turn_off
+      entity_id: light.onoff_plug_1_3
 
 - id: "Bewegung Arbeitszimmer LED aus"
   alias: "Bewegung Arbeitszimmer LED aus"
