@@ -4,7 +4,7 @@
 - id: "Termine"
   alias: "Termine"
   trigger:
-      platform: time
+      platform: time_pattern
       minutes: '/5'
       seconds: 0
   condition:
@@ -116,4 +116,3 @@
       data_template:
           message: >
             Nicht vergessen, {{ states.input_select.who_cooks.state}} kocht heute. Einen guten Appetit!
-
