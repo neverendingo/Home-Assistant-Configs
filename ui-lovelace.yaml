@@ -25,8 +25,8 @@ views:
           - type: glance
             columns: 2
             entities:
-              - device_tracker.ingo_motog6
-              - device_tracker.steffi_motog5
+              - device_tracker.ingo
+              - device_tracker.steffi
           - type: glance
             columns: 3
             entities:
@@ -272,7 +272,7 @@ views:
       - type: entities
         name: Steffi
         entities:
-          - device_tracker.steffi_motog5
+          - device_tracker.steffi
           - input_boolean.steffi_schlafen
 
       ############################################################
@@ -281,7 +281,7 @@ views:
       - type: entities
         name: Ingo
         entities:
-          - device_tracker.ingo_motog6
+          - device_tracker.ingo
           - sensor.ingo_battery
           - input_boolean.ingo_schlafen
 
@@ -327,7 +327,7 @@ views:
       ############################################################
       - type: map
         entities:
-          - entity: device_tracker.ingo_motog6
+          - entity: device_tracker.ingo
         title: Wo ist Ingo?
 
 

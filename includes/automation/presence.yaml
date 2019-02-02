@@ -1,3 +1,40 @@
+- alias: 'Gruss an Leute'
+  trigger:
+    - platform: state
+      entity_id:
+        - device_tracker.ingo
+        - device_tracker.steffi
+      from: 'not_home'
+      to: 'home'
+      for: '00:02:00'
+  action:
+    - service: script.speech_engine
+      data_template:
+        personarriving: >
+          {% set person = trigger.entity_id.split('.')[1]|replace('_', ' ')%}
+          {%- macro greeting_sentence(person) -%}
+          {{ [
+          "Willkommen zurück in der Heimat, " ~ person,
+          "Ratet, wer wieder da ist?" ~ person +" ist es!",
+          person + " ist wieder im Haus.",
+          "Willkommen zuhause, " ~ person + ".  Wir haben dich vermisst. Oder zumindest der Hund hat es.",
+          "Unser zuhause ist nun wieder komplett, Schalte ab und entspann dich! Willkommen zurück, " ~ person,
+          "Hallo " ~ person + " Willkommen zuhause!",
+          "Klopf klopf, wer ist da? "   ~ person +" ist es!",
+          person + " kann sich nicht vor dem System verstecken. Willkommen zuhause.",
+          person ~ "! Du bist wieder da!",
+          "Ich kenne ein Geheimnis! "  ~ person +" ist zuhause!",
+          "Hey "  ~ person +". Deine Ankunft wurde von der klügsten Wohnung des Blocks aufgezeichnet.",
+          "Ich spüre eine Erschütterung der Macht. "  ~ person +" muss nachhause gekommen sein!",
+          "Und so wird aus einem Haus eine Heimat. Willkommen zurück " ~ person,
+          "Eine kurze Nachricht. " ~ person +" ist angekommen!",
+          "Entschuldige die Störung, aber " ~ person +" ist zuhause!",
+          "Meine Systeme verzeichnen die Präsenz weiterer menschlicher Entitäten. " ~ person +" wurde als zuhause registriert."
+          ] | random }}
+          {%- endmacro -%}
+          {{greeting_sentence(person)}} 
+
+
 ############################################################
 # Urlaubsmodus
 ############################################################
@@ -134,4 +171,3 @@
   action:
     - service: script.turn_on
       entity_id: script.awaking_steffi
-
