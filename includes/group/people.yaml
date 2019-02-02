@@ -45,3 +45,9 @@ alarm_clock:
     - input_boolean.awake_light
     - input_boolean.awake_radio
     - input_select.timer_radio_station
+
+bedtime:
+    name: "Schlafenszeit"
+    entities:
+      - input_boolean.steffi_schlafen
+      - input_boolean.ingo_schlafen

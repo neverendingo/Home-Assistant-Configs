@@ -72,3 +72,13 @@ lms_player1_sync:
 lms_player2_sync:
     name: arbeitszimmer
     icon: mdi:cast
+
+speech_notifications:
+  name: Sprachnachrichten
+  icon: mdi:speaker-wireless
+  initial: on
+
+text_notifications:
+  name: Textnachrichten
+  icon: mdi:cellphone-wireless
+  initial: on
