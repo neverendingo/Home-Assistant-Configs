@@ -316,7 +316,7 @@ views:
           title:                Geräte Online
           column_width:         calc(100% / 4)
 
-      -type:                   entities
+      - type:                   entities
         title:                  Termine
         entities:
           - sensor.template_calendar_birthdays
