@@ -26,8 +26,8 @@ main:
     - input_select.who_cooks
 
 familie:
-    - device_tracker.ingo_motog5
-    - device_tracker.steffi_motog3
+    - device_tracker.ingo_motog6
+    - device_tracker.steffi_motog5
 
 livingroom:
     - light.onoff_plug_1_4

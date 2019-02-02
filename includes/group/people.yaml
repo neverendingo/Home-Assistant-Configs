@@ -18,14 +18,14 @@ people:
 ingo:
   name: Ingo
   entities:
-    - device_tracker.ingo_motog5
+    - device_tracker.ingo_motog6
     - sensor.ingo_battery
     - input_boolean.ingo_schlafen
 
 steffi:
   name: Steffi
   entities:
-    - device_tracker.steffi_motog3
+    - device_tracker.steffi_motog5
     - input_boolean.steffi_schlafen
 
 termine:
