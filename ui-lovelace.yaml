@@ -1,10 +1,10 @@
-title:                          FrikaHome
+title: FrikaHome
 
 resources:
-  - url:                        /local/neverend.css
-    type:                       css
+  - url: /local/neverend.css
+    type: css
 
-background:                     center / cover no-repeat url("/local/images/background.jpg") fixed
+background: center / cover no-repeat url("/local/images/background.jpg") fixed
 
 views:
   ################################################################
@@ -12,53 +12,53 @@ views:
   # Hauptansicht
   ################################################################
   ################################################################
-  - icon:      mdi:home-assistant
-    title:       Default
-    path:      default
+  - icon: mdi:home-assistant
+    title: Default
+    path: default
 
     cards:
       ############################################################
       # Hauptansicht
       ############################################################
-      - type:                   horizontal-stack
+      - type: horizontal-stack
         cards:
-          - type:               glance
-            columns:            2
+          - type: glance
+            columns: 2
             entities:
               - device_tracker.ingo_motog6
               - device_tracker.steffi_motog5
-          - type:               glance
-            columns:            3
+          - type: glance
+            columns: 3
             entities:
               - input_boolean.anwesend
-              - entity:         input_boolean.urlaub
+              - entity: input_boolean.urlaub
                 tap_action:
-                  action:       toggle
-              - entity:         input_boolean.sommer_modus
-                name:           Sommermodus
+                  action: toggle
+              - entity: input_boolean.sommer_modus
+                name: Sommermodus
                 tap_action:
-                  action:       toggle
-              - entity:         input_boolean.workday
+                  action: toggle
+              - entity: input_boolean.workday
                 tap_action:
-                  action:       toggle
-              - entity:         input_select.who_cooks
+                  action: toggle
+              - entity: input_select.who_cooks
                 tap_action:
-                  action:       call-service
-                  service:      input_select.select_next
+                  action: call-service
+                  service: input_select.select_next
                   service_data:
                     entity_id:  input_select.who_cooks
-              - entity:         input_boolean.alarm_aktiv
+              - entity: input_boolean.alarm_aktiv
                 tap_action:
-                  action:       toggle
+                  action: toggle
       ############################################################
       # Wecker
       ############################################################
-      - type:                   conditional
+      - type: conditional
         conditions:
-          - entity:             input_boolean.alarm_aktiv
-            state:              "on"
+          - entity: input_boolean.alarm_aktiv
+            state: "on"
         card:
-          type:                 entities
+          type: entities
           entities:
             - sensor.alarm_clock_time
             - input_number.alarm_clock_hour
@@ -69,15 +69,14 @@ views:
       ############################################################
       # Wetter
       ############################################################
-      - type:                   weather-forecast
-        entity:                 weather.openweathermap
+      - type: weather-forecast
+        entity: weather.openweathermap
 
-      - id:                     04b343001b8c418fb3f945b7d250ff14  # Automatically created id
-        type:                   entities
+      - type: entities
         entities:
           - sensor.moon
 
-      - type:                   entities
+      - type: entities
         entities:
           - sensor.disk_use_percent
           - sensor.processor_use
@@ -85,165 +84,165 @@ views:
           - sensor.network_in_wlan0
           - sensor.network_out_wlan0
           - sensor.last_boot
-          - type:               divider
+          - type: divider
           - sensor.speedtest_download
           - sensor.speedtest_upload
           - sensor.speedtest_ping
 
-      - type:                   iframe
-        url:                    https://embed.windy.com/embed2.html
-        title:                  Wetterradar
+      - type: iframe
+        url: https://embed.windy.com/embed2.html
+        title: Wetterradar
 
   ################################################################
   ################################################################
   # Räume
   ################################################################
   ################################################################
-  - title:                      Wohnzimmer
-    path:                       livingroom
+  - title: Wohnzimmer
+    path:  livingroom
     cards:
-      - type:                   vertical-stack
+      - type: vertical-stack
         cards:
-        - type:                 horizontal-stack
+        - type: horizontal-stack
           cards:
-            - type:             light
-              entity:           light.lampe_1
-            - type:             light
-              entity:           light.lampe_2
-        - type:                 horizontal-stack
+            - type: light
+              entity: light.lampe_1
+            - type: light
+              entity: light.lampe_2
+        - type: horizontal-stack
           cards:
-            - type:             light
-              entity:           light.lampe_3
-            - type:             light
-              entity:           light.wohnzimmer_strip
-        - type:                 horizontal-stack
+            - type: light
+              entity: light.lampe_3
+            - type: light
+              entity: light.wohnzimmer_strip
+        - type: horizontal-stack
           cards:
-            - type:             light
-              entity:           light.color_light_1
-            - type:             entity-button
-              entity:           light.onoff_plug_1_4
+            - type: light
+              entity: light.color_light_1
+            - type: entity-button
+              entity: light.onoff_plug_1_4
               tap_action:
-                action:         toggle
+                action: toggle
 
-      - type:                   sensor
-        entity:                 sensor.fibaro_livingroom_luminance
-        graph:                  line
-      - type:                   entities
-        show_header_toggle:     false
+      - type: sensor
+        entity: sensor.fibaro_livingroom_luminance
+        graph: line
+      - type: entities
+        show_header_toggle: false
         entities:
           - input_boolean.livingroom_partymode
           - input_select.light_scenes
-          - type:               divider
+          - type: divider
           - climate.heating_livingroom
           - climate.heating_livingroom_eco
-          - type:               divider
+          - type: divider
           - input_boolean.livingroom_motion
           - binary_sensor.fibaro_livingroom_sensor
-  - title:                      Arbeitszimmer
-    path:                       office
+  - title: Arbeitszimmer
+    path: office
     cards:
-      - type:                   vertical-stack
+      - type: vertical-stack
         cards:
-        - type:                 horizontal-stack
+        - type: horizontal-stack
           cards:
-            - type:             entity-button
-              entity:           light.onoff_plug_1_3
+            - type: entity-button
+              entity: light.onoff_plug_1_3
               tap_action:
-                action:         toggle
-            - type:             light
-              entity:           light.onoff_plug_1_2
-        - type:                 horizontal-stack
+                action: toggle
+            - type: light
+              entity: light.onoff_plug_1_2
+        - type: horizontal-stack
           cards:
-            - type:             light
-              entity:           light.office_led
-            - type:             light
-              entity:           light.arbeitszimmer_strip
-      - type:                   sensor
-        entity:                 sensor.arbeitszimmer_lux
-        graph:                  line
-      - type:                   entities
-        show_header_toggle:     false
+            - type: light
+              entity: light.office_led
+            - type: light
+              entity: light.arbeitszimmer_strip
+      - type: sensor
+        entity: sensor.arbeitszimmer_lux
+        graph: line
+      - type: entities
+        show_header_toggle: false
         entities:
           - climate.heating_office
           - climate.heating_office_eco
-          - type:               divider
+          - type: divider
           - sensor.arbeitszimmer_temperatur
           - sensor.arbeitszimmer_gef_temperatur
           - sensor.arbeitszimmer_luftfeuchtigkeit
           - input_boolean.essen_kommen
-          - type:               divider
+          - type: divider
           - input_boolean.office_motion
           - sensor.arbeitszimmer_bewegung
-  - title:                      Andere
-    path:                       other_rooms
+  - title: Andere
+    path: other_rooms
     cards:
-      - type:                   entities
-        title:                  Küche
-        show_header_toggle:     false
+      - type: entities
+        title: Küche
+        show_header_toggle: false
         entities:
           - climate.heating_kitchen
           - climate.heating_kitchen_eco
-      - type:                   entities
-        title:                  Schlafzimmer
-        show_header_toggle:     false
+      - type: entities
+        title: Schlafzimmer
+        show_header_toggle: false
         entities:
           - climate.heating_bedroom
-      - type:                   entities
-        title:                  Flur
-        show_header_toggle:     false
+      - type: entities
+        title: Flur
+        show_header_toggle: false
         entities:
           - climate.heating_hall
           - climate.heating_hall_eco
 
-  - icon:                       mdi:radiator
-    title:                      Heizungen
-    path:                       heizungen
+  - icon: mdi:radiator
+    title: Heizungen
+    path: heizungen
     cards:
-      - type:                   history-graph
-        title:                  Temperaturen
+      - type: history-graph
+        title: Temperaturen
         entities:
-          - entity:             sensor.heat_outside
-            name:               Außentemperatur
-          - entity:             sensor.heat_livingroom
-            name:               Wohnzimmer
-          - entity:             sensor.heat_office
-            name:               Arbeitszimmer
-          - entity:             sensor.heat_bedroom
-            name:               Schlafzimmer
-          - entity:             sensor.heat_hall
-            name:               Flur
-      - type:                   vertical-stack
+          - entity: sensor.heat_outside
+            name: Außentemperatur
+          - entity: sensor.heat_livingroom
+            name: Wohnzimmer
+          - entity: sensor.heat_office
+            name: Arbeitszimmer
+          - entity: sensor.heat_bedroom
+            name: Schlafzimmer
+          - entity: sensor.heat_hall
+            name: Flur
+      - type: vertical-stack
         cards:
-          - type:               horizontal-stack
+          - type: horizontal-stack
             cards:
-              - type:           thermostat
-                name:           Wohnzimmer
-                entity:         climate.heating_livingroom
-              - type:           thermostat
-                name:           Arbeitszimmer
-                entity:         climate.heating_office
-      - type:                   vertical-stack
+              - type: thermostat
+                name: Wohnzimmer
+                entity: climate.heating_livingroom
+              - type: thermostat
+                name: Arbeitszimmer
+                entity: climate.heating_office
+      - type: vertical-stack
         cards:
-          - type:               horizontal-stack
+          - type: horizontal-stack
             cards:
-              - type:           thermostat
-                name:           Küche
-                entity:         climate.heating_kitchen
-              - type:           thermostat
-                name:           Flur
-                entity:         climate.heating_hall
-      - type:                   vertical-stack
+              - type: thermostat
+                name: Küche
+                entity: climate.heating_kitchen
+              - type: thermostat
+                name: Flur
+                entity: climate.heating_hall
+      - type: vertical-stack
         cards:
-          - type:               horizontal-stack
+          - type: horizontal-stack
             cards:
-              - type:           thermostat
-                name:           Schlafzimmer
-                entity:         climate.heating_bedroom
-      - type:                   entities
-        title:                  Einstellungen
+              - type: thermostat
+                name: Schlafzimmer
+                entity: climate.heating_bedroom
+      - type: entities
+        title: Einstellungen
         entities:
           - sensor.current_heating_mode
-          - type:               divider
+          - type: divider
           - input_number.morning_temp
           - input_number.evening_temp
           - input_number.daytime_temp
@@ -263,15 +262,15 @@ views:
   # Persönlich
   ################################################################
   ################################################################
-  - icon:                       mdi:account-multiple
-    title:                      Persönlich
-    path:                       personal
+  - icon: mdi:account-multiple
+    title: Persönlich
+    path: personal
     cards:
       ############################################################
       # Steffis Zeug
       ############################################################
-      - type:                   entities
-        name:                   Steffi
+      - type: entities
+        name: Steffi
         entities:
           - device_tracker.steffi_motog5
           - input_boolean.steffi_schlafen
@@ -279,8 +278,8 @@ views:
       ############################################################
       # Ingos Zeug
       ############################################################
-      - type:                   entities
-        name:                   Ingo
+      - type: entities
+        name: Ingo
         entities:
           - device_tracker.ingo_motog6
           - sensor.ingo_battery
@@ -289,7 +288,7 @@ views:
       ############################################################
       # Alle Geräte
       ############################################################
-      - type:                   entity-filter
+      - type: entity-filter
         entities:
           - device_tracker.kindle_ingo
           - device_tracker.tablet_ingo
@@ -312,12 +311,12 @@ views:
         state_filter:
           - home
         card:
-          type:                 glance
-          title:                Geräte Online
-          column_width:         calc(100% / 4)
+          type: glance
+          title: Geräte Online
+          column_width: calc(100% / 4)
 
-      - type:                   entities
-        title:                  Termine
+      - type: entities
+        title: Termine
         entities:
           - sensor.template_calendar_birthdays
           - sensor.frikatermine
@@ -326,10 +325,10 @@ views:
       ############################################################
       # Wo ist Ingo
       ############################################################
-      - type:                   map
+      - type: map
         entities:
-          - entity:             device_tracker.ingo_motog6
-        title:                  Wo ist Ingo?
+          - entity: device_tracker.ingo_motog6
+        title: Wo ist Ingo?
 
 
   ################################################################
@@ -337,22 +336,21 @@ views:
   # Medien
   ################################################################
   ################################################################
-  - icon:                       mdi:play-pause
-    title:                      Medien
-    path:                       media
+  - icon: mdi:play-pause
+    title: Medien
+    path: media
     cards:
-      - id:                     3ba68f05eead4d68a4b8a78d59f7d973  # Automatically created id
-        type:                   entities
-        title:                  Radio
+      - type: entities
+        title: Radio
         entities:
           - input_select.radio_player
           - input_select.radio_station
-      #- type:                  media-control
-        #entity:                media_player.amazon_fire_tv
-      - type:                   vertical-stack
+      #- type: media-control
+        #entity: media_player.amazon_fire_tv
+      - type: vertical-stack
         cards:
-            - type:             entities
-              title:            Squeezebox
+            - type: entities
+              title: Squeezebox
               entities:
                  - input_select.lms_player
                  - input_select.lms_source
@@ -361,48 +359,48 @@ views:
                  - input_text.lms_song
                  - input_text.lms_playlist
                  - input_select.lms_command
-            - type:             glance
-              column_width:     33%
-              show_state:       false
+            - type: glance
+              column_width: 33%
+              show_state: false
               entities:
-                 - entity:      script.lms_cmd_pause_player
+                 - entity: script.lms_cmd_pause_player
                    tap_action:  toggle
-                   name:        Pause
-                 - entity:      script.lms_cmd_start_player
+                   name: Pause
+                 - entity: script.lms_cmd_start_player
                    tap_action:  toggle
-                   name:        Play
-                 - entity:      script.lms_cmd_next_track
+                   name: Play
+                 - entity: script.lms_cmd_next_track
                    tap_action:  toggle
-                   name:        Next Track
-            - type:             glance
-              column_width:     25%
-              show_state:       true
+                   name: Next Track
+            - type: glance
+              column_width: 25%
+              show_state: true
               entities:
                  - input_number.lms_volume
                  - input_number.lms_sleep_time
-                 - entity:      input_boolean.lms_shuffle
+                 - entity: input_boolean.lms_shuffle
                    tap_action:  toggle
-                 - entity:      input_boolean.lms_repeat
+                 - entity: input_boolean.lms_repeat
                    tap_action:  toggle
 
-      - type:                   entities
-        title:                  Sync-Kontrolle
-        show_header_toggle:     true
+      - type: entities
+        title: Sync-Kontrolle
+        show_header_toggle: true
         entities:
             - input_select.lms_sync_master
             - input_boolean.lms_player1_sync
             - input_boolean.lms_player2_sync
 
-      - type:                   media-control
-        entity:                 media_player.wohnzimmer
-      - type:                   media-control
-        entity:                 media_player.arbeitszimmer
+      - type: media-control
+        entity: media_player.wohnzimmer
+      - type: media-control
+        entity: media_player.arbeitszimmer
 
-  - icon:                       mdi:settings
-    title:                      Einstellungen
-    path:                       settings
+  - icon: mdi:settings
+    title: Einstellungen
+    path: settings
     cards:
-      - type:                   entities
-        title:                  entities
+      - type: entities
+        title: entities
         entities:
           - group.all_automations
