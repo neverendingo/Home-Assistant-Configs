@@ -54,7 +54,7 @@
     ingo_battery:
       value_template: '{{states.device_tracker.ingo_motog6.attributes.battery}}'
       unit_of_measurement: '%'
-      friendly_name: 'Ingo Moto G5 Akku'
+      friendly_name: 'Ingo Moto G6 Akku'
     anwesend:
       value_template: '{{ states("input_boolean.anwesend") }}'
     urlaub:

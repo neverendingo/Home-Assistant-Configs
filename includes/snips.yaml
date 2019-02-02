@@ -3,10 +3,11 @@
 ############################################################
 
 LampenAnSchalten:
-  speech:
-    type: plain
-    text: 'Ok, Licht wird im {% if deviceLocation is defined %}{{ deviceLocation | replace(" ","") }}{% else %}{{ site_id }}{% endif %} angemacht'
   action:
+    - service: script.speech_engine
+      data_template:
+          do_what_i_want: 1
+          value1: "Das Licht wird angemacht"
     - service: light.turn_on
       data_template:
         entity_id: light.{%- if deviceLocation is defined -%}{{ deviceLocation | replace(" ","") }}{% else %}{{ site_id }}{%- endif -%}_lichter
