@@ -49,10 +49,7 @@ speech_engine:
       data_template:
         site_id: >-
             {% if site_id | length == 0 %}
-              {% set site_id = [
-                'wohnzimmer',
-                'arbeitszimmer'
-              ] %}
+              {% set site_id = 'wohnzimmer' %}
             {% endif %}
             {% if site_id is not string and site_id is sequence %}
               {% set site_id = site_id|join(', ') %}
